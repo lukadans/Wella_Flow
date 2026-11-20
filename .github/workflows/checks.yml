@@ -1,0 +1,21 @@
+name: Verificacoes
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  validar:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip check
+      - run: python main.py doctor
+      - run: python -m compileall -q main.py tratamento wella_test/salvos
+      - run: python wella_test/salvos/teste_catalogo_wella_ampliado.py --quantidades 10 100 --repeticoes 1

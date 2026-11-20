@@ -1,0 +1,22 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+credentials*.json
+token*.json
+*.pem
+*.key
+# Rascunho local com exemplos de integracoes e credenciais antigas.
+/test.py
+# Catalogos e resultados locais; nao fazem parte do codigo-fonte.
+/dados/
+**/catalogo_teste*/
+*.log
+Thumbs.db
+.DS_Store
