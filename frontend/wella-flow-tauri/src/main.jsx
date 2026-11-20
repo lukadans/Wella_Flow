@@ -176,6 +176,12 @@ function App() {
         {pages.map(({ id, label, Icon }) => <button type="button" className="nav-item" key={id}
           aria-current={id === page ? 'page' : undefined} onClick={() => navigate(id)}><Icon size={19}/><span>{label}</span></button>)}
       </nav>
+      <button type="button" className="sidebar-order" onClick={() => dialog.current.showModal()}>
+        <span className="sidebar-order__glass"><strong>Meu pedido</strong>
+          <small>{unitCount} {unitCount === 1 ? 'unidade' : 'unidades'}</small>
+        </span>
+        <span className="sidebar-order__arrow" aria-hidden="true"><ChevronRight size={18}/></span>
+      </button>
       <button type="button" className="theme-button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
         {theme === 'dark' ? <Sun size={19}/> : <Moon size={19}/>}
         {theme === 'dark' ? 'Tema claro' : 'Tema escuro'}

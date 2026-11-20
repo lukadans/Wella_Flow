@@ -312,3 +312,75 @@ dialog::backdrop { background: #050a12be; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before { transition: none !important; }
 }
+
+/* Sidebar card adapted from Uiverse.io by monkey_8812. */
+.sidebar-order {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  flex: none;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  max-height: 250px;
+  margin: 18px 0;
+  padding: 9px;
+  color: white;
+  background: #b38af0;
+  border: 1px solid #ffffff66;
+  border-radius: 16px;
+  text-align: left;
+}
+.sidebar-order::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: -2;
+  background: #222;
+  border-radius: 12px 88px 40px 12px;
+}
+.sidebar-order::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #a855f7, #fdba74);
+  transform: translate(-50%, -50%);
+}
+.sidebar-order__glass {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 64%;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: #23202873;
+  backdrop-filter: blur(16px);
+}
+.sidebar-order__arrow {
+  display: grid;
+  place-items: center;
+  align-self: end;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff30;
+}
+@keyframes order-orbit {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-order::after { animation: order-orbit 12s linear infinite; }
+}
+@media (min-width: 761px) {
+  .sidebar { overflow-y: auto; }
+}
+@media (max-width: 760px) {
+  .sidebar-order { display: none; }
+}
