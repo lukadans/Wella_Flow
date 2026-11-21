@@ -86,6 +86,82 @@ form{display:grid;gap:20px}
 @media(max-width:800px){.auth-tabs{margin-top:0}}
 @media(max-width:420px){.auth-tabs{margin-bottom:21px}#register-form{gap:13px}}
 
+
+/* Ajuste de proporções — login compacto, sem alterar a identidade visual */
+body{padding:20px 18px}
+.shell{
+  width:min(924px,100%);
+  min-height:0;
+  grid-template-columns:minmax(0,.91fr) minmax(0,1.09fr);
+  border-radius:25px;
+}
+.brand-panel{padding:27px 30px}
+.salon-logo{height:50px;max-width:66px}
+.wordmark{gap:11px}
+.wordmark .appname{font-size:21px}
+.wordmark .divider{height:29px}
+.intro-section{padding:40px 0 30px}
+.eyebrow{margin-bottom:15px;font-size:10px}
+.intro-section h1{font-size:clamp(32px,3.4vw,40px);margin-bottom:15px;max-width:350px;letter-spacing:-.053em}
+.intro-section p{font-size:13px;line-height:1.65;max-width:320px}
+.features{gap:7px}
+.features span{padding:7px 10px;font-size:10.5px}
+.brand-footer{margin-top:18px;font-size:10px}
+.login-panel{padding:26px clamp(26px,3vw,38px)}
+.login-head{margin-bottom:19px}
+.access{margin-bottom:12px;font-size:10px}
+.login-head h2{font-size:clamp(26px,2.7vw,30px);margin-bottom:7px}
+.login-head p{font-size:12px;line-height:1.5}
+.auth-tabs{margin:0 0 18px;padding:4px}
+.auth-tab{min-height:38px}
+form{gap:13px}
+.field{gap:6px}
+.field label{font-size:11.5px}
+.control input{height:45px;border-radius:11px;font-size:13px}
+.submit{min-height:47px;margin-top:2px;border-radius:11px;font-size:13px}
+.status{min-height:0;margin:2px 0 0}
+.status[hidden]{display:none;visibility:hidden}
+.demo-notice{margin-top:18px;padding:10px 12px;font-size:10.5px;line-height:1.55}
+#register-form{gap:11px}
+#register-form .field{gap:5px}
+#register-form .control input{height:44px}
+#register-form .submit{margin-top:4px}
+#register-form .status{margin:0}
+.field-hint{font-size:10px;line-height:1.3}
+.switch-hint{margin:0;font-size:11px}
+@media(max-width:800px){
+  body{padding:14px;align-items:start}
+  .shell{grid-template-columns:1fr;max-width:470px;min-height:0}
+  .brand-panel{padding:20px 24px}
+  .brand-panel .intro-section{padding:14px 0 4px}
+  .brand-panel .intro-section h1{font-size:24px;line-height:1.12;margin-bottom:8px}
+  .brand-panel .intro-section p{font-size:11px}
+  .login-panel{padding:25px 27px 26px}
+  .login-head{margin-bottom:18px}
+  .auth-tabs{margin:0 0 17px}
+  .demo-notice{margin-top:17px}
+}
+@media(max-width:520px){
+  body{padding:10px}
+  .shell{border-radius:21px}
+  .brand-panel{padding:17px 20px}
+  .brand-panel .intro-section{display:none}
+  .salon-logo{height:40px}
+  .wordmark .appname{font-size:19px}
+  .login-panel{padding:23px 20px 22px}
+  .login-head h2{font-size:26px}
+  .login-head{margin-bottom:17px}
+  #register-form{gap:10px}
+  .auth-tabs{margin:0 0 15px}
+  .demo-notice{margin-top:16px}
+}
+@media(max-width:360px){
+  .brand-panel{padding:15px 16px}
+  .login-panel{padding:20px 16px}
+  .wordmark .appname{font-size:18px}
+  .auth-tab{font-size:12px}
+}
+
 </style>
 </head>
 <body>
