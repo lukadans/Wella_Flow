@@ -66,6 +66,25 @@ form{display:grid;gap:20px}
 @media(max-width:800px){body{padding:17px}.shell{grid-template-columns:1fr;max-width:560px;min-height:0}.brand-panel{padding:23px 26px 24px}.brand-panel:before{inset:-140% -70% 5% -70%}.brand-panel .intro-section{padding:19px 0 8px}.brand-panel .intro-section h1{font-size:27px;margin-bottom:10px;max-width:none}.brand-panel .intro-section p{font-size:12px;line-height:1.5;max-width:460px}.brand-panel .features,.brand-footer,.eyebrow{display:none}.salon-logo{height:45px}.wordmark .appname{font-size:19px}.wordmark .divider{height:26px}.login-panel{padding:33px 27px 27px}.login-head{margin-bottom:24px}}
 @media(max-width:420px){body{padding:10px;align-items:start}.shell{border-radius:23px}.brand-panel{padding:19px 20px 20px}.login-panel{padding:28px 21px 25px}.intro-section h1{font-size:24px!important}.brand-panel .intro-section p{display:none}.login-head h2{font-size:27px}.control input{height:50px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+
+/* Alternância entre entrar e criar conta preservando o Vidro Líquido */
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:-6px 0 25px;padding:5px;background:rgba(8,20,36,.65);border:1px solid rgba(157,185,212,.25);border-radius:14px}
+.auth-tab{min-height:42px;padding:8px 11px;cursor:pointer;border-radius:10px;color:#9eb4cc;border:1px solid transparent;background:transparent;font-size:13px;font-weight:720;transition:background .2s,color .2s,border-color .2s,box-shadow .2s}
+.auth-tab[aria-selected="true"]{color:#f7f9fd;background:linear-gradient(135deg,rgba(81,117,154,.48),rgba(137,137,152,.20));border-color:rgba(226,235,245,.26);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 4px 12px rgba(0,0,0,.15)}
+.auth-tab:not([aria-selected="true"]):hover{background:rgba(255,255,255,.055);color:#dbe7f4}
+.auth-tab:focus-visible,.text-action:focus-visible{outline:2px solid #d6e8f7;outline-offset:3px}
+.login-panel form[hidden]{display:none!important}
+#register-form{gap:14px}
+#register-form .submit{margin-top:9px}
+#register-form .field{gap:7px}
+#register-form .control input{height:49px}
+#register-form .status{margin:1px 0 0}
+.switch-hint{text-align:center;font-size:12px;color:#b8c9dc;margin:1px 0 0}
+.text-action{font:inherit;font-weight:750;color:#e9ddc6;cursor:pointer;background:transparent;border:none;padding:3px}
+.text-action:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:800px){.auth-tabs{margin-top:0}}
+@media(max-width:420px){.auth-tabs{margin-bottom:21px}#register-form{gap:13px}}
+
 </style>
 </head>
 <body>
@@ -88,9 +107,13 @@ form{display:grid;gap:20px}
     <header class="login-head">
       <span class="access">Acesso interno</span>
       <h2 id="login-title">Bem-vindo de volta.</h2>
-      <p>Entre com seus dados para acessar sua área de trabalho.</p>
+      <p id="login-subtitle">Entre com seus dados para acessar sua área de trabalho.</p>
     </header>
-    <form id="login-form" novalidate>
+    <div class="auth-tabs" role="tablist" aria-label="Acesso ao Wella Flow">
+      <button type="button" class="auth-tab" id="tab-login" role="tab" aria-controls="login-form" aria-selected="true" data-auth="login">Entrar</button>
+      <button type="button" class="auth-tab" id="tab-register" role="tab" aria-controls="register-form" aria-selected="false" data-auth="register" tabindex="-1">Criar conta</button>
+    </div>
+    <form id="login-form" role="tabpanel" aria-labelledby="tab-login" novalidate>
       <div class="field">
         <label for="email">E-mail</label>
         <div class="control"><input id="email" name="email" inputmode="email" autocomplete="off" type="email" placeholder="seu@email.com" required></div>
@@ -99,39 +122,137 @@ form{display:grid;gap:20px}
         <label for="password">Senha</label>
         <div class="control password">
           <input id="password" name="password" type="password" autocomplete="off" placeholder="Digite sua senha" required minlength="6">
-          <button type="button" class="reveal" id="toggle-password" aria-pressed="false" aria-label="Mostrar senha">Mostrar</button>
+          <button type="button" class="reveal" data-show="password" aria-pressed="false" aria-label="Mostrar senha">Mostrar</button>
         </div>
       </div>
       <div class="under-password"><button type="button" class="help-button" id="recover">Esqueceu a senha?</button></div>
       <button class="submit" type="submit">Entrar no Wella Flow <span class="arrow" aria-hidden="true">↗</span></button>
       <p id="form-status" class="status" aria-live="polite" hidden></p>
     </form>
-    <aside class="demo-notice"><strong>Protótipo visual.</strong> O login ainda não está conectado a um servidor. Não informe senhas reais nesta página.</aside>
+    <form id="register-form" role="tabpanel" aria-labelledby="tab-register" novalidate hidden>
+      <div class="field">
+        <label for="register-name">Nome completo</label>
+        <div class="control"><input id="register-name" name="name" type="text" autocomplete="off" placeholder="Como podemos chamar você?" required minlength="2" maxlength="90"></div>
+      </div>
+      <div class="field">
+        <label for="register-email">E-mail</label>
+        <div class="control"><input id="register-email" name="email" inputmode="email" autocomplete="off" type="email" placeholder="seu@email.com" required></div>
+      </div>
+      <div class="field">
+        <label for="register-password">Criar senha</label>
+        <div class="control password">
+          <input id="register-password" name="password" type="password" autocomplete="off" placeholder="Mínimo de 8 caracteres" required minlength="8">
+          <button type="button" class="reveal" data-show="register-password" aria-pressed="false" aria-label="Mostrar senha">Mostrar</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="register-confirm">Confirmar senha</label>
+        <div class="control password">
+          <input id="register-confirm" name="confirm" type="password" autocomplete="off" placeholder="Repita a senha" required minlength="8">
+          <button type="button" class="reveal" data-show="register-confirm" aria-pressed="false" aria-label="Mostrar senha">Mostrar</button>
+        </div>
+      </div>
+      <button class="submit" type="submit">Criar minha conta <span class="arrow" aria-hidden="true">↗</span></button>
+      <p id="register-status" class="status" aria-live="polite" hidden></p>
+      <p class="switch-hint">Já possui uma conta? <button type="button" class="text-action" data-switch="login">Entrar</button></p>
+    </form>
+    <aside class="demo-notice"><strong>Protótipo visual.</strong> Entrar e criar conta apenas validam os campos nesta página. Nenhuma conta é criada e nenhuma informação é enviada ou armazenada. Não informe senhas reais.</aside>
   </section>
 </main>
 <script>
-const form=document.querySelector('#login-form');
-const status=document.querySelector('#form-status');
-const password=document.querySelector('#password');
-const toggle=document.querySelector('#toggle-password');
-const recover=document.querySelector('#recover');
-function report(message){status.hidden=false;status.dataset.type='warn';status.textContent=message}
-toggle.addEventListener('click',()=>{
- const showing=password.type==='password';
- password.type=showing?'text':'password';
- toggle.setAttribute('aria-pressed',String(showing));
- toggle.setAttribute('aria-label',showing?'Ocultar senha':'Mostrar senha');
- toggle.textContent=showing?'Ocultar':'Mostrar';
+const loginForm=document.querySelector('#login-form');
+const registerForm=document.querySelector('#register-form');
+const loginTitle=document.querySelector('#login-title');
+const loginSubtitle=document.querySelector('#login-subtitle');
+const tabs=[...document.querySelectorAll('.auth-tab')];
+const loginStatus=document.querySelector('#form-status');
+const registerStatus=document.querySelector('#register-status');
+
+function report(node,message){
+  node.hidden=false;
+  node.dataset.type='warn';
+  node.textContent=message;
+}
+function clearStatus(node){
+  node.hidden=true;
+  node.textContent='';
+}
+function hidePasswords(){
+  for(const input of document.querySelectorAll('input[type="password"],input[data-visible="true"]')){
+    input.type='password';
+    input.removeAttribute('data-visible');
+  }
+  for(const button of document.querySelectorAll('button[data-show]')){
+    button.setAttribute('aria-pressed','false');
+    button.setAttribute('aria-label','Mostrar senha');
+    button.textContent='Mostrar';
+  }
+}
+function showMode(mode){
+  const registering=mode==='register';
+  loginForm.hidden=registering;
+  registerForm.hidden=!registering;
+  loginTitle.textContent=registering?'Crie sua conta.':'Bem-vindo de volta.';
+  loginSubtitle.textContent=registering?'Preencha os dados para começar sua experiência no Wella Flow.':'Entre com seus dados para acessar sua área de trabalho.';
+  tabs.forEach(tab=>{
+    const selected=tab.dataset.auth===mode;
+    tab.setAttribute('aria-selected',String(selected));
+    tab.tabIndex=selected?0:-1;
+  });
+  clearStatus(loginStatus);clearStatus(registerStatus);
+  hidePasswords();
+  document.title=registering?'Wella Flow · Criar conta':'Wella Flow · Entrar';
+}
+tabs.forEach((tab,index)=>{
+  tab.addEventListener('click',()=>showMode(tab.dataset.auth));
+  tab.addEventListener('keydown',event=>{
+    if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+    event.preventDefault();
+    const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+    tabs[next].focus();showMode(tabs[next].dataset.auth);
+  });
 });
-recover.addEventListener('click',()=>report('A recuperação de senha ainda não está integrada. Esta é apenas uma demonstração visual.'));
-form.addEventListener('submit',event=>{
- event.preventDefault();
- const email=form.querySelector('#email');
- if(!email.value.trim()){report('Preencha o campo de e-mail para testar a validação visual.');email.focus();return}
- if(!email.validity.valid){report('Informe um e-mail em formato válido.');email.focus();return}
- if(password.value.length<6){report('Para testar, use uma senha fictícia de pelo menos 6 caracteres.');password.focus();return}
- report('Campos validados! A autenticação real será integrada ao backend. Nenhum dado foi enviado.');
- password.value='';
+document.querySelectorAll('button[data-switch]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    showMode(button.dataset.switch);
+    document.querySelector('[data-auth="'+button.dataset.switch+'"]').focus();
+  });
+});
+document.querySelectorAll('button[data-show]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const input=document.getElementById(button.dataset.show);
+    const showing=input.type==='password';
+    input.type=showing?'text':'password';
+    if(showing)input.dataset.visible='true';
+    else input.removeAttribute('data-visible');
+    button.setAttribute('aria-pressed',String(showing));
+    button.setAttribute('aria-label',showing?'Ocultar senha':'Mostrar senha');
+    button.textContent=showing?'Ocultar':'Mostrar';
+  });
+});
+document.querySelector('#recover').addEventListener('click',()=>report(loginStatus,'Recuperação de senha ainda não integrada. Esta é uma demonstração visual.'));
+loginForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  const email=document.querySelector('#email');
+  const password=document.querySelector('#password');
+  if(!email.value.trim()){report(loginStatus,'Preencha seu e-mail para testar a validação.');email.focus();return;}
+  if(!email.validity.valid){report(loginStatus,'Informe um e-mail em formato válido.');email.focus();return;}
+  if(password.value.length<6){report(loginStatus,'Use uma senha fictícia com pelo menos 6 caracteres.');password.focus();return;}
+  report(loginStatus,'Campos de login validados. Nenhuma autenticação foi realizada.');
+  password.value='';hidePasswords();
+});
+registerForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  const name=document.querySelector('#register-name');
+  const email=document.querySelector('#register-email');
+  const password=document.querySelector('#register-password');
+  const confirm=document.querySelector('#register-confirm');
+  if(name.value.trim().length<2){report(registerStatus,'Informe seu nome com pelo menos 2 caracteres.');name.focus();return;}
+  if(!email.validity.valid){report(registerStatus,'Informe um e-mail válido para o cadastro.');email.focus();return;}
+  if(password.value.length<8){report(registerStatus,'A senha de teste precisa ter pelo menos 8 caracteres.');password.focus();return;}
+  if(password.value!==confirm.value){report(registerStatus,'As senhas não coincidem.');confirm.focus();return;}
+  report(registerStatus,'Cadastro validado visualmente! Nenhuma conta foi criada ou armazenada. O próximo passo é integrar o backend.');
+  password.value='';confirm.value='';hidePasswords();
 });
 </script>
 </body>
