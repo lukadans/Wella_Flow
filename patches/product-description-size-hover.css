@@ -1,0 +1,20 @@
+/* Wella Flow: efeito isolado em descrição e gramatura.
+   CSS ADITIVO para os cards que já existem; não altera .product, .product-art, .toolbar ou bordas.
+   Adaptado às classes .product h3 e .product-size encontradas na prévia do frontend. */
+.product h3,
+.product .product-size {
+  transform-origin:left center;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),text-shadow .4s ease,color .4s ease;
+}
+.product:is(:hover,:focus-within) h3 {
+  transform:translateY(-2px) scale(1.035);
+  color:#fffdf7;
+  text-shadow:0 4px 12px rgba(0,0,0,.36),0 0 10px rgba(246,239,223,.38);
+}
+.product:is(:hover,:focus-within) .product-size {
+  transform:translateY(-2px) scale(1.08);
+  text-shadow:0 0 10px rgba(247,239,220,.58);
+}
+@media (prefers-reduced-motion:reduce) {
+  .product h3,.product .product-size {transition:none;transform:none}
+}
