@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101a2d">
+<title>Wella Flow · Card com borda em degradê</title>
+<style>
+:root {color-scheme:dark; font-family:Inter,"Segoe UI",Arial,sans-serif;background:#101a2d;color:#edf4ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;background:radial-gradient(circle at 16% 2%,#3049696b,transparent 40%),radial-gradient(circle at 96% 95%,#37435454,transparent 42%),#101a2d}
+main{width:min(940px,100%);padding:38px 22px 50px;margin:auto}
+.eyebrow{font-size:11px;color:#a9c4df;text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(25px,4vw,38px);letter-spacing:-.045em;line-height:1.1;margin:0 0 12px}
+.lead{font-size:14px;color:#b7c9de;line-height:1.65;max-width:680px;margin:0}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;margin-top:34px}
+.demo{border-radius:23px;border:1px solid #c1d5ef24;background:linear-gradient(160deg,#1f2d46b0,#141e32b0);padding:24px 15px 22px;display:flex;flex-direction:column;align-items:center;min-width:0}
+.demo h2{font-size:15px;margin:0;font-weight:700}
+.demo .hint{font-size:12px;color:#b4c9de;line-height:1.5;text-align:center;margin:8px 0 20px}
+.stage{width:100%;min-height:420px;display:flex;align-items:center;justify-content:center;padding:26px 12px 20px;overflow:visible}
+.card{width:320px;max-width:100%;height:350px;padding:20px;color:white;background:linear-gradient(#212121,#212121) padding-box,linear-gradient(145deg,transparent 35%,#e81cff,#40c9ff) border-box;border:2px solid transparent;border-radius:8px;display:flex;flex-direction:column;cursor:pointer;transform-origin:right bottom;transition:transform .6s cubic-bezier(.23,1,.32,1),box-shadow .6s cubic-bezier(.23,1,.32,1);outline:none}
+.card .main-content{flex:1;min-height:0}
+.card .header{display:flex;justify-content:space-between;gap:10px;font-size:12px}
+.card .header span:first-child{font-weight:600;color:#858585}
+.card .heading{font-size:24px;margin:24px 0 16px;font-weight:600;line-height:1.2}
+.card .categories{display:flex;gap:8px;flex-wrap:wrap}
+.card .categories span{background-color:#e81cff;padding:4px 8px;font-weight:600;text-transform:uppercase;font-size:12px;border-radius:50em}
+.card .footer{font-size:13px;font-weight:600;color:#999;margin-top:auto}
+.card:is(:hover,:focus-visible,.is-tilted){transform:rotate(8deg)}
+.card:focus-visible{outline:2px solid #e2edff;outline-offset:6px}
+.card.wella{height:392px;border-radius:17px;padding:15px;background:linear-gradient(150deg,#17253bd9,#1c2f4cdd 55%,#152139f2) padding-box,linear-gradient(145deg,#5d8fc4 0%,#f7fbff 43%,#e6e7e3 58%,#d6c6a4 84%,#789ec6 100%) border-box;box-shadow:0 16px 36px #030a1861,inset 0 1px #ffffff18;transform-origin:right bottom}
+.card.wella:is(:hover,:focus-visible,.is-tilted){transform:rotate(6deg);box-shadow:0 18px 42px #030a1894,0 0 28px #d6c6a433}
+.card.wella .header span:first-child{font-weight:800;letter-spacing:.05em;color:#f2f6ff}
+.card.wella .header span:last-child{color:#dfd9c8;font-weight:600}
+.card.wella .main-content{display:flex;flex-direction:column}
+.product-photo{height:205px;min-height:0;border-radius:12px;margin:12px 0 0;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 52% 28%,#fbfaf7,#e5ebef 60%,#cad7e2 100%);border:1px solid #ffffff85}
+.product-photo img{display:block;object-fit:contain;width:100%;height:100%;mix-blend-mode:multiply;transition:transform .6s ease}
+.card.wella:is(:hover,:focus-visible,.is-tilted) .product-photo img{transform:scale(1.07)}
+.product-photo .fallback{display:none;color:#244c6f;text-align:center;font-size:14px;font-weight:800}
+.card.wella .heading{font-size:19px;line-height:1.15;letter-spacing:-.025em;margin:14px 0 10px}
+.card.wella .categories span{font-size:10px;color:#15273e;background:linear-gradient(130deg,#f6fbff,#e9dfca);border:1px solid #ffffff7d}
+.card.wella .footer{border-top:1px solid #d6e7ff24;padding-top:11px;margin-top:14px;color:#cbd8e9;font-weight:500;font-size:12px}
+.actions{display:flex;justify-content:center;margin-top:12px}
+button{background:linear-gradient(135deg,#6e96c33d,#b5c2d91a);border:1px solid #c3defa69;border-radius:100px;color:#ecf5ff;padding:10px 17px;font-size:12px;font-weight:700;cursor:pointer}
+button[aria-pressed="true"]{background:#7299b365}
+button:focus-visible{outline:2px solid #cfeaff;outline-offset:3px}
+.note{max-width:700px;margin:22px auto 0;font-size:12px;color:#abbfd5;line-height:1.7;text-align:center}
+.colorbar{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:18px}
+.colorbar span{font-size:11px;color:#b9cde1}
+.colors{width:150px;height:9px;border-radius:99px;background:linear-gradient(90deg,#5d8fc4,#f7fbff,#e6e7e3,#d6c6a4)}
+@media(max-width:710px){main{padding:27px 14px 40px}.gallery{grid-template-columns:1fr;max-width:400px;margin:28px auto 0}.stage{min-height:408px;padding:22px 13px 10px}.demo{padding:20px 10px}.card{width:302px}.card.wella{width:302px}.note{margin-top:24px}}
+@media(prefers-reduced-motion:reduce){.card,.product-photo img{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Wella Flow · Laboratório de componentes</p>
+<h1>Card com borda em degradê e inclinação</h1>
+<p class="lead">Comparação entre o CSS original e a adaptação para o catálogo Wella Flow. A segunda versão mantém o efeito de rotação, recebe o degradê azul → branco → ouro branco e mostra uma foto do produto.</p>
+<div class="gallery">
+  <section class="demo" aria-label="Versão original">
+    <h2>01 · Card original</h2>
+    <p class="hint">Gradiente rosa e ciano · rotação de 8°</p>
+    <div class="stage">
+      <article class="card" id="original" tabindex="0" aria-label="Exemplo original de card com rotação">
+        <div class="main-content">
+          <div class="header"><span>Article on</span><span>29-June-2023</span></div>
+          <p class="heading">Different ways to use CSS in React</p>
+          <div class="categories"><span>React</span><span>Css</span></div>
+        </div>
+        <div class="footer">by Harsh Gupta</div>
+      </article>
+    </div>
+    <div class="actions"><button type="button" data-tilt="original" aria-pressed="false">Ativar inclinação</button></div>
+  </section>
+  <section class="demo" aria-label="Versão Wella Flow">
+    <h2>02 · Card Wella Flow</h2>
+    <p class="hint">Azul, branco e ouro branco · rotação de 6°</p>
+    <div class="stage">
+      <article class="card wella" id="wella" tabindex="0" aria-label="Card Shampoo Oil Reflections 250 ml">
+        <div class="main-content">
+          <div class="header"><span>WELLA PROFESSIONALS</span><span>250 ml</span></div>
+          <div class="product-photo">
+            <img src="https://wella.vtexassets.com/arquivos/ids/170630-216-216/7896235353768--1-.jpg?v=639262805926130000" alt="Frasco de Shampoo Wella Oil Reflections 250 ml" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.style.display='block'">
+            <span class="fallback">WELLA<br>OIL REFLECTIONS<br>250 ml</span>
+          </div>
+          <p class="heading">Shampoo Oil Reflections</p>
+          <div class="categories"><span>Shampoo</span><span>Oil Reflections</span></div>
+        </div>
+        <div class="footer">Wella Flow · Prévia do catálogo</div>
+      </article>
+    </div>
+    <div class="actions"><button type="button" data-tilt="wella" aria-pressed="false">Ativar inclinação</button></div>
+  </section>
+</div>
+<div class="colorbar"><span>Paleta</span><div class="colors" role="img" aria-label="Azul, branco e ouro branco"></div></div>
+<p class="note">Passe o mouse ou use o botão para ativar a inclinação (inclusive no celular). Esta é uma prévia isolada e não altera a interface principal. A imagem do produto é carregada da loja Wella; se falhar, aparece uma identificação alternativa.</p>
+</main>
+<script>
+document.querySelectorAll('[data-tilt]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const target=document.getElementById(button.dataset.tilt);
+    const on=target.classList.toggle('is-tilted');
+    button.setAttribute('aria-pressed',String(on));
+    button.textContent=on?'Remover inclinação':'Ativar inclinação';
+  });
+});
+</script>
+</body>
+</html>

@@ -351,6 +351,7 @@ loginForm.addEventListener('submit',event=>{
   if(password.value.length<6){report(loginStatus,'Use uma senha fictícia com pelo menos 6 caracteres.');password.focus();return;}
   report(loginStatus,'Campos de login validados. Nenhuma autenticação foi realizada.');
   password.value='';hidePasswords();
+  window.location.assign('catalogo.html');
 });
 const registerPhone=document.querySelector('#register-phone');
 function digitsOnly(value){return value.replace(/\D/g,'').slice(0,11);}

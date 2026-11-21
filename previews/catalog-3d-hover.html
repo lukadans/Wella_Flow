@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Wella Flow — Teste 3D Hover</title>
+<style>
+:root{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#eff6ff;color-scheme:dark;background:#101827}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 13% 9%,#314d6d77,transparent 42%),radial-gradient(ellipse at 96% 80%,#383d5277,transparent 43%),#101827}
+.page{max-width:920px;margin:auto;padding:32px 22px 54px}
+.eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#b3c8df;font-weight:750;margin:0 0 10px}
+h1{font-size:clamp(26px,4vw,40px);line-height:1.1;letter-spacing:-.04em;margin:0 0 14px}
+.intro{font-size:14px;color:#c0cee0;line-height:1.65;max-width:650px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:29px}
+.demo{min-width:0;border:1px solid #bed2ed29;border-radius:22px;background:linear-gradient(150deg,#1d2a40a1,#141e30b0);padding:22px 14px 25px;text-align:center}
+.demo h2{font-size:15px;margin:0}
+.demo .caption{font-size:12px;color:#b1c7e0;margin:8px 0 24px;line-height:1.45}
+.cards{perspective:500px;width:100%;height:335px;display:flex;align-items:center;justify-content:center}
+.card{width:200px;height:250px;background:#16161d;border:2px solid #555;border-radius:4px;position:relative;transform-style:preserve-3d;will-change:transform;transition:transform .5s cubic-bezier(.2,.8,.2,1);outline:none}
+.card:is(:hover,:focus-visible,.tilted){transform:translateZ(10px) rotateX(20deg) rotateY(20deg)}
+.card_title{color:#fff;position:absolute;top:50%;right:20px;transform:translateY(-50%);transition:transform .5s;font:700 1.5rem monospace;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
+.card:is(:hover,:focus-visible,.tilted) .card_title{transform:translateZ(50px) translateY(-50%)}
+.card:focus-visible{outline:2px solid #dbecff;outline-offset:8px}
+.card.wella{width:238px;height:314px;border-radius:21px;border:2px solid transparent;background:linear-gradient(160deg,#203652,#17283e 56%,#111e31) padding-box,linear-gradient(136deg,#b8ad99 0%,#f9f7ef 23%,#e9e6de 44%,#cec2ab 66%,#f5f3eb 84%,#b7aa95 100%) border-box;box-shadow:0 16px 35px #070d1dcc,inset 0 1px 0 #ffffff26;transform-style:preserve-3d;transform:none}
+.card.wella:is(:hover,:focus-visible,.tilted){transform:none;box-shadow:0 16px 35px #070d1dcc,inset 0 1px 0 #ffffff26}
+.wella .small-top{position:absolute;top:14px;left:15px;right:15px;text-align:left;display:flex;justify-content:space-between;gap:6px;color:#e5f0ff;font-size:10px;font-weight:800;letter-spacing:.06em;transform-style:preserve-3d}
+.wella .small-top span:last-child{color:#f4eee2;display:inline-block;transform:translateZ(0);transition:transform .5s cubic-bezier(.2,.8,.2,1),color .5s,text-shadow .5s;backface-visibility:hidden}
+.wella .photo{position:absolute;top:42px;left:39px;right:39px;height:173px;border-radius:15px;background:radial-gradient(circle at 50% 34%,#fff,#f0eee8 60%,#d6dfe8);box-shadow:inset 0 0 0 1px #ffffffaa,0 9px 18px #0b172a77;display:flex;align-items:center;justify-content:center;transform:translateZ(12px);transition:transform .5s ease}
+.wella .photo img{display:block;width:100%;height:100%;object-fit:contain;border-radius:14px;mix-blend-mode:multiply;transform:scale(.97)}
+.wella:is(:hover,:focus-visible,.tilted) .photo{transform:translateZ(12px)}
+.wella .photo .fallback{display:none;color:#25415c;font-size:12px;font-weight:800}
+.wella .product-title{position:absolute;top:230px;left:13px;right:13px;margin:0;font-weight:760;font-size:16px;line-height:1.18;letter-spacing:-.025em;text-align:left;text-shadow:0 2px 12px #050b1a;transform:translateZ(0);transition:transform .5s cubic-bezier(.2,.8,.2,1),text-shadow .5s,color .5s;backface-visibility:hidden}
+.wella:is(:hover,:focus-visible,.tilted) .product-title{transform:translateZ(46px) rotateX(3deg) rotateY(-4deg);color:#fffdf7;text-shadow:0 5px 18px #030814a3,0 0 16px #f1e9d146}
+.wella:is(:hover,:focus-visible,.tilted) .small-top span:last-child{transform:translateZ(48px) rotateX(4deg) rotateY(-6deg);color:#fffdf6;text-shadow:0 5px 15px #010811a3,0 0 10px #eae2cf57}
+.wella .meta{position:absolute;left:13px;right:13px;bottom:13px;display:flex;justify-content:space-between;align-items:center;color:#c7d8eb;font-size:11px;transform:translateZ(13px)}
+.wella .meta .tag{padding:4px 8px;color:#283c56;background:linear-gradient(115deg,#f8fcff,#e9dfc7);border-radius:999px;font-size:10px;font-weight:800}
+button{margin-top:15px;border-radius:999px;background:linear-gradient(140deg,#698ebd49,#b7c9dc20);border:1px solid #aecfec7b;color:#edf6ff;padding:10px 17px;font-size:12px;font-weight:700;cursor:pointer}
+button[aria-pressed=true]{background:#719abe66}
+button:focus-visible{outline:2px solid #cdeaff;outline-offset:3px}
+.tip{color:#aabed6;font-size:12px;line-height:1.6;margin-top:22px;text-align:center}
+.links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:12px}
+a{color:#d6e6fd}
+@media(max-width:650px){.page{padding:27px 15px 42px}.grid{grid-template-columns:1fr;max-width:370px;margin:26px auto 0}.demo{padding:20px 12px 24px}.cards{height:340px}}
+@media(prefers-reduced-motion:reduce){.card,.card_title,.wella .photo,.wella .product-title,.wella .small-top span:last-child{transition:none}}
+</style>
+</head>
+<body>
+<main class="page">
+  <p class="eyebrow">Wella Flow · Laboratório de componentes</p>
+  <h1>Teste de card com efeito 3D</h1>
+  <p class="intro">O primeiro reproduz a inclinação original. No segundo, o card fica imóvel: apenas o nome e a gramatura se elevam em 3D. A borda recebe acabamento metálico em ouro branco.</p>
+  <div class="grid">
+    <section class="demo">
+      <h2>01 · Original</h2><p class="caption">Rotação X/Y de 20° e texto elevado em 50px</p>
+      <div class="cards"><figure class="card" id="original" tabindex="0" aria-label="Card original com efeito 3D"><figcaption class="card_title">3D Hover</figcaption></figure></div>
+      <button type="button" data-card="original" aria-pressed="false">Ativar efeito 3D</button>
+    </section>
+    <section class="demo">
+      <h2>02 · Wella Flow</h2><p class="caption">Card imóvel · borda ouro branco · nome e gramatura em 3D</p>
+      <div class="cards"><figure class="card wella" id="wella" tabindex="0" aria-label="Card Wella Oil Reflections com efeito 3D">
+        <div class="small-top"><span>WELLA PROFESSIONALS</span><span>250 ml</span></div>
+        <div class="photo"><img alt="Wella Professionals Oil Reflections shampoo 250 ml" src="https://static.thcdn.com/productimg/original/11352932-1755158481408427.jpg" onerror="this.hidden=true;this.nextElementSibling.style.display='block'"><span class="fallback">OIL REFLECTIONS<br>250 ml</span></div>
+        <figcaption class="product-title">Shampoo Oil Reflections</figcaption>
+        <div class="meta"><span>Oil Reflections</span><span class="tag">Shampoo</span></div>
+      </figure></div>
+      <button type="button" data-card="wella" aria-pressed="false">Ativar efeito 3D</button>
+    </section>
+  </div>
+  <p class="tip">No computador, passe o cursor sobre o card. No celular, use o botão. Na versão Wella, somente o nome e a gramatura de 250 ml recebem movimento.</p>
+  <div class="links"><a href="sidebar-hover-glass.html">Rever o card hover anterior</a><a href="catalog-tilt-gradient.html">Rever a borda em degradê</a></div>
+</main>
+<script>
+document.querySelectorAll("button[data-card]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const card=document.getElementById(button.dataset.card);
+  const on=card.classList.toggle("tilted");
+  button.setAttribute("aria-pressed",String(on));
+  button.textContent=on?"Desativar efeito":"Ativar efeito 3D";
+ });
+});
+</script>
+</body>
+</html>
