@@ -410,7 +410,11 @@ document.getElementById('register-next').addEventListener('click',()=>{
 document.getElementById('register-back').addEventListener('click',()=>showRegistrationStep(1,true));
 registerForm.addEventListener('submit',event=>{
   event.preventDefault();
-  if(!validatePersonalDetails()){showRegistrationStep(1,false);return;}
+  if(!validatePersonalDetails()){
+    showRegistrationStep(1,false);
+    validatePersonalDetails();
+    return;
+  }
   if(registrationStep!==2){showRegistrationStep(2,true);return;}
   if(registerPassword.value.length<8){
     report(registerStatus,'A senha de teste precisa ter pelo menos 8 caracteres.');
