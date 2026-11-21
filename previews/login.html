@@ -82,6 +82,7 @@ form{display:grid;gap:20px}
 .switch-hint{text-align:center;font-size:12px;color:#b8c9dc;margin:1px 0 0}
 .text-action{font:inherit;font-weight:750;color:#e9ddc6;cursor:pointer;background:transparent;border:none;padding:3px}
 .text-action:hover{text-decoration:underline;text-underline-offset:3px}
+.field-hint{font-size:11px;line-height:1.45;color:#93abc5}
 @media(max-width:800px){.auth-tabs{margin-top:0}}
 @media(max-width:420px){.auth-tabs{margin-bottom:21px}#register-form{gap:13px}}
 
@@ -137,6 +138,11 @@ form{display:grid;gap:20px}
       <div class="field">
         <label for="register-email">E-mail</label>
         <div class="control"><input id="register-email" name="email" inputmode="email" autocomplete="off" type="email" placeholder="seu@email.com" required></div>
+      </div>
+      <div class="field">
+        <label for="register-phone">Telefone (com DDD)</label>
+        <div class="control"><input id="register-phone" name="phone" type="tel" inputmode="numeric" autocomplete="off" placeholder="(22) 99999-9999" maxlength="15" aria-describedby="phone-hint" required></div>
+        <small class="field-hint" id="phone-hint">Para contato e futuras atualizações sobre seus pedidos.</small>
       </div>
       <div class="field">
         <label for="register-password">Criar senha</label>
@@ -241,14 +247,35 @@ loginForm.addEventListener('submit',event=>{
   report(loginStatus,'Campos de login validados. Nenhuma autenticação foi realizada.');
   password.value='';hidePasswords();
 });
+const registerPhone=document.querySelector('#register-phone');
+function digitsOnly(value){return value.replace(/\D/g,'').slice(0,11);}
+function formatBrazilianPhone(value){
+  const digits=digitsOnly(value);
+  if(!digits)return '';
+  if(digits.length<=2)return '('+digits;
+  const ddd=digits.slice(0,2);
+  const local=digits.slice(2);
+  if(local.length<=4)return '('+ddd+') '+local;
+  const firstPartLength=digits.length===11?5:4;
+  return '('+ddd+') '+local.slice(0,firstPartLength)+'-'+local.slice(firstPartLength);
+}
+registerPhone.addEventListener('input',()=>{
+  registerPhone.value=formatBrazilianPhone(registerPhone.value);
+});
 registerForm.addEventListener('submit',event=>{
   event.preventDefault();
   const name=document.querySelector('#register-name');
   const email=document.querySelector('#register-email');
+  const phone=registerPhone;
   const password=document.querySelector('#register-password');
   const confirm=document.querySelector('#register-confirm');
   if(name.value.trim().length<2){report(registerStatus,'Informe seu nome com pelo menos 2 caracteres.');name.focus();return;}
   if(!email.validity.valid){report(registerStatus,'Informe um e-mail válido para o cadastro.');email.focus();return;}
+  const phoneDigits=digitsOnly(phone.value);
+  if(!/^[1-9][0-9]{9,10}$/.test(phoneDigits)){
+    report(registerStatus,'Informe um telefone brasileiro com DDD: 10 ou 11 dígitos.');
+    phone.focus();return;
+  }
   if(password.value.length<8){report(registerStatus,'A senha de teste precisa ter pelo menos 8 caracteres.');password.focus();return;}
   if(password.value!==confirm.value){report(registerStatus,'As senhas não coincidem.');confirm.focus();return;}
   report(registerStatus,'Cadastro validado visualmente! Nenhuma conta foi criada ou armazenada. O próximo passo é integrar o backend.');
