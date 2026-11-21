@@ -162,6 +162,22 @@ form{gap:13px}
   .auth-tab{font-size:12px}
 }
 
+
+/* Cadastro em etapas: mantém o tamanho compacto do login sem comprimir a leitura */
+.register-progress{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:10px;border-bottom:1px solid rgba(202,223,243,.17);color:#a8bfd7;font-size:11px}
+#register-progress-step{font-weight:790;color:#eee2ca;letter-spacing:.03em}
+#register-progress-label{font-weight:660}
+.registration-step{display:grid;gap:11px}
+.registration-step[hidden]{display:none!important}
+#register-form{gap:12px}
+#register-form .submit{margin-top:4px}
+.register-actions{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);gap:10px;align-items:stretch;margin-top:5px}
+.register-actions .submit{min-width:0;margin:0!important}
+.back-button{border:1px solid rgba(170,199,228,.30);border-radius:11px;background:rgba(125,158,192,.09);color:#dbe5f1;font-size:12px;font-weight:730;cursor:pointer}
+.back-button:hover{background:rgba(177,201,229,.16)}
+.back-button:focus-visible{outline:2px solid #cdeaff;outline-offset:3px}
+@media(max-width:520px){.registration-step{gap:10px}.register-progress{padding-bottom:9px}}
+
 </style>
 </head>
 <body>
@@ -207,6 +223,11 @@ form{gap:13px}
       <p id="form-status" class="status" aria-live="polite" hidden></p>
     </form>
     <form id="register-form" role="tabpanel" aria-labelledby="tab-register" novalidate hidden>
+      <div class="register-progress" aria-live="polite">
+        <span id="register-progress-step">Etapa 1 de 2</span>
+        <span id="register-progress-label">Dados pessoais</span>
+      </div>
+      <div class="registration-step" id="register-step-1">
       <div class="field">
         <label for="register-name">Nome completo</label>
         <div class="control"><input id="register-name" name="name" type="text" autocomplete="off" placeholder="Como podemos chamar você?" required minlength="2" maxlength="90"></div>
@@ -220,6 +241,9 @@ form{gap:13px}
         <div class="control"><input id="register-phone" name="phone" type="tel" inputmode="numeric" autocomplete="off" placeholder="(22) 99999-9999" maxlength="15" aria-describedby="phone-hint" required></div>
         <small class="field-hint" id="phone-hint">Para contato e futuras atualizações sobre seus pedidos.</small>
       </div>
+        <button class="submit" id="register-next" type="button">Continuar <span class="arrow" aria-hidden="true">↗</span></button>
+      </div>
+      <div class="registration-step" id="register-step-2" hidden>
       <div class="field">
         <label for="register-password">Criar senha</label>
         <div class="control password">
@@ -234,7 +258,11 @@ form{gap:13px}
           <button type="button" class="reveal" data-show="register-confirm" aria-pressed="false" aria-label="Mostrar senha">Mostrar</button>
         </div>
       </div>
-      <button class="submit" type="submit">Criar minha conta <span class="arrow" aria-hidden="true">↗</span></button>
+        <div class="register-actions">
+          <button class="back-button" id="register-back" type="button">Voltar</button>
+          <button class="submit" type="submit">Criar conta <span class="arrow" aria-hidden="true">↗</span></button>
+        </div>
+      </div>
       <p id="register-status" class="status" aria-live="polite" hidden></p>
       <p class="switch-hint">Já possui uma conta? <button type="button" class="text-action" data-switch="login">Entrar</button></p>
     </form>
@@ -283,6 +311,7 @@ function showMode(mode){
   });
   clearStatus(loginStatus);clearStatus(registerStatus);
   hidePasswords();
+  showRegistrationStep(1,false);
   document.title=registering?'Wella Flow · Criar conta':'Wella Flow · Entrar';
 }
 tabs.forEach((tab,index)=>{
@@ -338,24 +367,61 @@ function formatBrazilianPhone(value){
 registerPhone.addEventListener('input',()=>{
   registerPhone.value=formatBrazilianPhone(registerPhone.value);
 });
-registerForm.addEventListener('submit',event=>{
-  event.preventDefault();
-  const name=document.querySelector('#register-name');
-  const email=document.querySelector('#register-email');
-  const phone=registerPhone;
-  const password=document.querySelector('#register-password');
-  const confirm=document.querySelector('#register-confirm');
-  if(name.value.trim().length<2){report(registerStatus,'Informe seu nome com pelo menos 2 caracteres.');name.focus();return;}
-  if(!email.validity.valid){report(registerStatus,'Informe um e-mail válido para o cadastro.');email.focus();return;}
-  const phoneDigits=digitsOnly(phone.value);
+const registrationStep1=document.getElementById('register-step-1');
+const registrationStep2=document.getElementById('register-step-2');
+const registerName=document.getElementById('register-name');
+const registerEmail=document.getElementById('register-email');
+const registerPassword=document.getElementById('register-password');
+const registerConfirm=document.getElementById('register-confirm');
+let registrationStep=1;
+function showRegistrationStep(step,focus){
+  registrationStep=step;
+  registrationStep1.hidden=step!==1;
+  registrationStep2.hidden=step!==2;
+  document.getElementById('register-progress-step').textContent='Etapa '+step+' de 2';
+  document.getElementById('register-progress-label').textContent=step===1?'Dados pessoais':'Segurança';
+  if(!registerForm.hidden){
+    loginTitle.textContent=step===1?'Crie sua conta.':'Último passo.';
+    loginSubtitle.textContent=step===1?'Preencha seus dados para começar.':'Defina sua senha para concluir seu cadastro.';
+  }
+  clearStatus(registerStatus);
+  if(focus)(step===1?registerName:registerPassword).focus();
+}
+function validatePersonalDetails(){
+  if(registerName.value.trim().length<2){
+    report(registerStatus,'Informe seu nome com pelo menos 2 caracteres.');
+    registerName.focus();return false;
+  }
+  if(!registerEmail.value.trim()||!registerEmail.validity.valid){
+    report(registerStatus,'Informe um e-mail válido para o cadastro.');
+    registerEmail.focus();return false;
+  }
+  const phoneDigits=digitsOnly(registerPhone.value);
   if(!/^[1-9][0-9]{9,10}$/.test(phoneDigits)){
     report(registerStatus,'Informe um telefone brasileiro com DDD: 10 ou 11 dígitos.');
-    phone.focus();return;
+    registerPhone.focus();return false;
   }
-  if(password.value.length<8){report(registerStatus,'A senha de teste precisa ter pelo menos 8 caracteres.');password.focus();return;}
-  if(password.value!==confirm.value){report(registerStatus,'As senhas não coincidem.');confirm.focus();return;}
+  return true;
+}
+document.getElementById('register-next').addEventListener('click',()=>{
+  if(!validatePersonalDetails())return;
+  showRegistrationStep(2,true);
+});
+document.getElementById('register-back').addEventListener('click',()=>showRegistrationStep(1,true));
+registerForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  if(!validatePersonalDetails()){showRegistrationStep(1,false);return;}
+  if(registrationStep!==2){showRegistrationStep(2,true);return;}
+  if(registerPassword.value.length<8){
+    report(registerStatus,'A senha de teste precisa ter pelo menos 8 caracteres.');
+    registerPassword.focus();return;
+  }
+  if(registerPassword.value!==registerConfirm.value){
+    report(registerStatus,'As senhas não coincidem.');
+    registerConfirm.focus();return;
+  }
   report(registerStatus,'Cadastro validado visualmente! Nenhuma conta foi criada ou armazenada. O próximo passo é integrar o backend.');
-  password.value='';confirm.value='';hidePasswords();
+  registerPassword.value='';registerConfirm.value='';hidePasswords();
 });
 </script>
 </body>
