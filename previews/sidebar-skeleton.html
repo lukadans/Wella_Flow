@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#141c2c">
+<title>Wella Flow — Card lateral com skeleton</title>
+<style>
+:root{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#eef3ff;background:#151d2d}
+*{box-sizing:border-box}
+body{min-height:100svh;margin:0;display:flex;align-items:center;justify-content:center;padding:34px 18px;background:radial-gradient(ellipse at 30% 24%,#293e59 0%,transparent 35%),radial-gradient(ellipse at 74% 75%,#1d2b42 0%,transparent 45%),#141c2d}
+.layout{display:flex;align-items:center;gap:50px;max-width:780px}
+.sidebar{width:224px;min-height:496px;flex:none;position:relative;overflow:hidden;border:1px solid rgba(159,190,232,.36);border-radius:25px;padding:22px 14px 23px;background:linear-gradient(145deg,rgba(65,94,135,.76) 0%,rgba(34,54,82,.81) 43%,rgba(27,43,67,.88) 100%);box-shadow:inset 2px 1px 2px #c0daff51,inset -2px -1px 2px #7894bc30,0 22px 55px #050b1880;backdrop-filter:blur(17px)}
+.sidebar:before{content:"";pointer-events:none;position:absolute;inset:-76% -70% 64% -12%;border-radius:50%;border:1px solid #b7d6fa47;transform:rotate(-24deg);box-shadow:0 0 30px #9bbef426}
+.sidebar:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(120deg,transparent 6%,#d6edff07 34%,transparent 55%);border-radius:inherit}
+.brand{position:relative;z-index:1;display:flex;align-items:center;gap:9px;padding:0 5px 18px}
+.logo{width:47px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f3f7ff;line-height:1}
+.logo-mark{font:700 22px/1 Georgia,serif;letter-spacing:-3px;color:#c7d9ff}
+.logo-name{font:700 13px/1 Georgia,serif;letter-spacing:1px}
+.logo-sub{font-size:4.8px;letter-spacing:1px;text-transform:uppercase;margin-top:3px}
+.brand-name{font-weight:760;font-size:18px;letter-spacing:-1px;white-space:nowrap}
+.profile{position:relative;z-index:1;padding:3px 5px 0;min-height:176px}
+.avatar{width:55px;height:55px;border:1px solid #94b4dc66;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,#5480ad60,#344d7090);font:16px Georgia,serif;margin-bottom:8px}
+.client-name{font:italic 30px Georgia,serif;margin:0 0 12px;letter-spacing:-1px}
+.info-label,.description-label{color:#c2d5ee;font-size:12px}
+.info-text{font-size:13px;line-height:1.5;margin:5px 0}
+.description{position:relative;z-index:1;margin-top:10px;border-top:1px solid #b0c9e84d;padding:21px 8px 0}
+.description-label{display:block;margin-bottom:10px}
+.product-name{font-size:15px;line-height:1.2;font-weight:750;letter-spacing:-.35px;margin:0 0 8px}
+.product-text{font-size:13px;line-height:1.45;margin:0}
+.panel{max-width:320px}
+.kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#a5bddb;margin:0 0 10px}
+h1{font-size:27px;line-height:1.13;letter-spacing:-.04em;margin:0 0 12px}
+.explain{color:#c2cfe2;font-size:14px;line-height:1.65;margin:0 0 22px}
+button{background:linear-gradient(140deg,#92bff040,#547da665);border:1px solid #aed8fc65;color:#f5f9ff;font:600 13px inherit;padding:12px 16px;border-radius:12px;cursor:pointer;box-shadow:inset 0 1px 0 #ffffff3d}
+button:hover{background:#6a9dce6b}
+button:focus-visible{outline:2px solid #d3ecff;outline-offset:3px}
+/* Skeleton baseado na estrutura enviada: avatar circular, título e descrição */
+.card{display:flex;align-items:center;gap:12px;width:100%;height:90px;padding:10px 0;background:transparent;box-shadow:none;position:relative}
+.card_load{width:61px;height:61px;flex:none;border-radius:50%}
+.card_load_content{flex:1;display:flex;flex-direction:column;gap:10px}
+.card_load_extreme_title{height:12px;width:78%;border-radius:6px}
+.card_load_extreme_descripion{height:40px;width:100%;border-radius:7px}
+.card_load,.card_load_extreme_title,.card_load_extreme_descripion,.skeleton-line{background:linear-gradient(110deg,#5f7fa56e 24%,#b9d5f585 39%,#5f7fa56e 54%);background-size:220% 100%;animation:load89234 1.8s linear infinite}
+.skeleton-line{height:11px;border-radius:6px;margin:12px 0}
+.skeleton-line.short{width:68%}
+.skeleton-line.long{width:92%}
+@keyframes load89234{to{background-position-x:-220%}}
+.loading-only{display:none}
+.is-loading .loading-only{display:block}
+.is-loading .ready-only{display:none}
+.is-loading .profile{min-height:176px}
+.is-loading .description{margin-top:10px}
+.status{display:block;color:#b7d2ec;margin-top:12px;font-size:12px}
+@media(max-width:600px){body{padding:24px 16px}.layout{flex-direction:column;gap:24px}.sidebar{width:224px}.panel{text-align:center}.explain{margin-bottom:14px}h1{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.card_load,.card_load_extreme_title,.card_load_extreme_descripion,.skeleton-line{animation:none}}
+</style>
+</head>
+<body>
+<main class="layout">
+  <aside class="sidebar is-loading" id="sidebar" aria-label="Cartão lateral do Wella Flow">
+    <div class="brand">
+      <div class="logo" aria-label="Joel Beauty Center">
+        <span class="logo-mark">J✦</span><span class="logo-name">JOEL</span><span class="logo-sub">Beauty Center</span>
+      </div><span class="brand-name">Wella Flow</span>
+    </div>
+    <section class="profile" aria-label="Dados do cliente">
+      <div class="loading-only" role="status" aria-label="Carregando perfil">
+        <div class="card"><div class="card_load"></div><div class="card_load_content"><div class="card_load_extreme_title"></div><div class="card_load_extreme_descripion"></div></div></div>
+        <div class="skeleton-line short"></div><div class="skeleton-line long"></div>
+      </div>
+      <div class="ready-only">
+        <div class="avatar">C</div><h2 class="client-name">Cliente</h2>
+        <span class="info-label">Última compra</span>
+        <p class="info-text">Sem compra registrada</p>
+      </div>
+    </section>
+    <section class="description" aria-label="Descrição do produto">
+      <div class="loading-only" role="status" aria-label="Carregando produto">
+        <div class="skeleton-line short"></div><div class="skeleton-line long"></div><div class="skeleton-line long"></div><div class="skeleton-line short"></div>
+      </div>
+      <div class="ready-only">
+        <small class="description-label">Descrição do produto</small>
+        <h3 class="product-name">Shampoo Oil Reflections 250 ml</h3>
+        <p class="product-text">Shampoo da linha Oil Reflections, em embalagem de 250 ml.</p>
+      </div>
+    </section>
+  </aside>
+  <section class="panel">
+    <p class="kicker">Wella Flow · Prévia do componente</p>
+    <h1>Barra lateral com skeleton</h1>
+    <p class="explain">O efeito de carregamento usa a estrutura enviada, adaptada ao vidro azul-escuro. Quando os dados ficam disponíveis, o conteúdo original aparece sem alterar o design do card.</p>
+    <button type="button" id="reload">Simular carregamento</button>
+    <span class="status" id="status" aria-live="polite">Carregando informações…</span>
+  </section>
+</main>
+<script>
+const sidebar=document.getElementById('sidebar');
+const button=document.getElementById('reload');
+const status=document.getElementById('status');
+let pending;
+function simulate(){clearTimeout(pending); sidebar.classList.add('is-loading');button.disabled=true;status.textContent='Carregando informações…';pending=setTimeout(()=>{sidebar.classList.remove('is-loading');button.disabled=false;status.textContent='Conteúdo carregado · Clique para repetir';},1800);}
+button.addEventListener('click',simulate);
+simulate();
+</script>
+</body>
+</html>
