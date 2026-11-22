@@ -580,6 +580,7 @@ body.wella-auth-locked{overflow:hidden!important}
     transition: box-shadow 180ms ease, background-color 180ms ease;
   }
   .mobile-order-rail-preview__toggle:active { box-shadow: 0 4px 16px #0005; }
+  .mobile-order-rail-preview.is-dialog-open { visibility: hidden; }
   .mobile-order-rail-preview__toggle:focus-visible {
     outline: 2px solid var(--accent); outline-offset: -4px;
   }
@@ -653,8 +654,9 @@ body.wella-auth-locked{overflow:hidden!important}
   if (!root) return;
   let rail = null;
   let badge = null;
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // O clique fora fecha a janela nativa; clique no conteúdo não a fecha.
+  // Fechar com toque no backdrop, sem fechar por toques no conteúdo.
   const bindDialogDismiss = () => {
     root.querySelectorAll('dialog').forEach(dialog => {
       if (dialog.dataset.dismissOnBackdrop === 'true') return;
@@ -676,47 +678,92 @@ body.wella-auth-locked{overflow:hidden!important}
     badge.textContent = String(Number(count) || 0);
   };
 
-  // A janela de revisão parte da posição do botão, como uma gota se expandindo.
-  const animateLiquidOpen = (dialog, sourceRect) => {
-    if (!dialog?.open || !sourceRect ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      typeof dialog.animate !== 'function') return;
+  // O próprio botão vira a janela: o dialog começa com as mesmas dimensões
+  // e posição do botão e cresce até ocupar sua posição final.
+  const openReview = () => {
+    const reviewButton = root.querySelector('.page-header .draft-button');
+    const dialog = root.querySelector('dialog[aria-labelledby="draft-title"]');
+    const toggle = rail?.querySelector('.mobile-order-rail-preview__toggle');
+    if (!reviewButton || !dialog || !toggle || dialog.open) return;
+
+    const source = toggle.getBoundingClientRect();
+    const buttonStyle = getComputedStyle(toggle);
+    const buttonBackground = buttonStyle.backgroundColor;
+    const buttonShadow = buttonStyle.boxShadow;
+    dialog.classList.add('wella-order-liquid');
+
+    // A função original do React abre o modal e mantém o carrinho real.
+    reviewButton.click();
+    if (!dialog.open) {
+      dialog.classList.remove('wella-order-liquid');
+      return;
+    }
+
+    // O botão físico desaparece no mesmo instante em que sua forma continua
+    // como dialog na top layer. Não há painel, cópia nem salto entre camadas.
+    rail.classList.add('is-dialog-open');
+
+    const cleanup = () => {
+      rail?.classList.remove('is-dialog-open');
+      dialog.classList.remove('wella-order-liquid');
+      dialog.removeEventListener('close', cleanup);
+    };
+    dialog.addEventListener('close', cleanup);
+
+    if (reducedMotion() || typeof dialog.animate !== 'function') return;
 
     const target = dialog.getBoundingClientRect();
     if (!target.width || !target.height) return;
-    const dx = sourceRect.left + sourceRect.width / 2 - (target.left + target.width / 2);
-    const dy = sourceRect.top + sourceRect.height / 2 - (target.top + target.height / 2);
-    const sx = Math.max(0.08, Math.min(0.75, sourceRect.width / target.width));
-    const sy = Math.max(0.08, Math.min(0.75, sourceRect.height / target.height));
 
-    dialog.animate([
+    const dialogStyle = getComputedStyle(dialog);
+    const dx = source.left + source.width / 2 - (target.left + target.width / 2);
+    const dy = source.top + source.height / 2 - (target.top + target.height / 2);
+    const sx = source.width / target.width;
+    const sy = source.height / target.height;
+    const morphTime = 560;
+    const form = dialog.querySelector('.draft');
+    // Esconde o conteúdo até o botão crescer o suficiente para recebê-lo.
+    const reveal = form?.animate([
+      { opacity: 0, filter: 'blur(5px)', transform: 'translateY(12px)' },
+      { opacity: 0, filter: 'blur(3px)', transform: 'translateY(7px)', offset: .28 },
+      { opacity: 1, filter: 'blur(0)', transform: 'translateY(0)' }
+    ], { duration: 370, delay: 190, easing: 'ease-out', fill: 'both' });
+
+    const morph = dialog.animate([
       {
-        transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(' + sx + ', ' + sy + ')',
-        borderRadius: '28px', opacity: 0.65, offset: 0
+        transform: 'translate3d(' + dx + 'px,' + dy + 'px,0) scale(' + sx + ',' + sy + ')',
+        borderRadius: '16px 0 0 16px', backgroundColor: buttonBackground,
+        boxShadow: buttonShadow, opacity: 1, offset: 0
       },
       {
-        transform: 'translate(0, 0) scale(1.035, .975)',
-        borderRadius: '23px', opacity: 1, offset: 0.72
+        transform: 'translate3d(' + dx * .34 + 'px,' + dy * .30 + 'px,0) scale(' +
+          (sx + (1 - sx) * .72) + ',' + (sy + (1 - sy) * .68) + ')',
+        borderRadius: '36px 24px 42px 22px',
+        opacity: 1, offset: .66
       },
       {
-        transform: 'translate(0, 0) scale(1, 1)',
-        borderRadius: '16px', opacity: 1, offset: 1
+        transform: 'translate3d(0,0,0) scale(1.025,.98)',
+        borderRadius: '22px 18px 23px 20px', opacity: 1, offset: .87
+      },
+      {
+        transform: 'translate3d(0,0,0) scale(1,1)',
+        borderRadius: dialogStyle.borderRadius,
+        backgroundColor: dialogStyle.backgroundColor,
+        boxShadow: dialogStyle.boxShadow, opacity: 1, offset: 1
       }
-    ], { duration: 480, easing: 'cubic-bezier(.2, .86, .25, 1)' });
-  };
-
-  const openReview = () => {
-    // Busca o elemento atual, evitando referência antiga após rerender do React.
-    const reviewButton = root.querySelector('.page-header .draft-button');
-    if (!reviewButton) return;
-    const sourceRect = rail?.querySelector('button')?.getBoundingClientRect();
-    reviewButton.click(); // Abre diretamente o modal real; sem etapa de "revisar pedido".
-    requestAnimationFrame(() => {
-      const dialog = root.querySelector('dialog[aria-labelledby="draft-title"]');
-      if (!dialog?.open) return;
-      dialog.classList.add('wella-order-liquid');
-      animateLiquidOpen(dialog, sourceRect);
+    ], {
+      duration: morphTime, easing: 'cubic-bezier(.18,.86,.20,1)',
+      fill: 'both'
     });
+
+    // Não deixar a janela travada caso o usuário feche durante a animação.
+    const stopAnimations = () => {
+      morph.cancel();
+      reveal?.cancel();
+    };
+    dialog.addEventListener('close', stopAnimations, { once: true });
+    morph.finished.then(() => morph.cancel()).catch(() => {});
+    reveal?.finished.then(() => reveal.cancel()).catch(() => {});
   };
 
   const install = () => {
@@ -743,7 +790,6 @@ body.wella-auth-locked{overflow:hidden!important}
     refreshCount();
   };
 
-  // Instala depois da renderização e acompanha a contagem do carrinho.
   new MutationObserver(install).observe(root, {
     childList: true, subtree: true, characterData: true
   });
