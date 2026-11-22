@@ -211,6 +211,39 @@ body {min-height:100dvh!important;display:grid!important;place-items:center!impo
 @media(prefers-reduced-motion:reduce){.preview-access button,.preview-access button::after{transition:none!important}}
 @media(max-width:600px){body{align-items:start!important;padding:10px!important}.shell{max-width:100%}}
 </style>
+
+<style id="wella-auth-mobile-centered-v2">
+/* Preserva o layout desktop e compacta/centraliza o modal mobile. */
+.optional-tag{color:#a3bad2;font-size:10px;font-weight:550;margin-left:4px}
+.register-progress{position:relative}
+.register-progress:after{content:"";position:absolute;bottom:-1px;left:0;width:50%;height:2px;background:#e9ddc5;transition:width .2s}
+.register-progress[data-step="2"]:after{width:100%}
+.login-panel .field:focus-within label{color:#fff2db}
+.login-panel .status:not([hidden]){padding:8px 11px;border:1px solid #f2cea14a;border-radius:9px;background:#d8ad6a0d}
+@media(max-width:600px){
+ html,body{height:100%;overflow:hidden!important}
+ body{height:100dvh!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:16px!important;overflow:hidden!important}
+ .shell{display:flex!important;flex-direction:column!important;width:min(420px,100%)!important;max-height:82dvh!important;min-height:0!important;overflow:hidden!important;border-radius:23px!important}
+ .brand-panel{flex-shrink:0;padding:13px 18px 10px!important}
+ .brand-panel .intro-section,.brand-panel .features,.brand-panel .brand-footer{display:none!important}
+ .salon-logo{height:32px!important}
+ .wordmark .appname{font-size:17px!important}
+ .wordmark .divider{height:23px!important}
+ .login-panel{display:block!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;scrollbar-width:thin;padding:16px 19px 18px!important}
+ .login-head{margin-bottom:12px!important}
+ .login-head h2{font-size:24px!important}
+ .login-head p{font-size:11px!important}
+ .access{margin-bottom:8px!important}
+ .auth-tabs{margin-bottom:13px!important}
+ .control input{height:43px!important}
+ #login-form,#register-form,.registration-step{gap:10px!important}
+ .demo-notice{margin-top:12px!important;padding:9px 10px!important;font-size:10px!important}
+ .preview-access{margin-top:7px!important}
+ .preview-access button{font-size:11px!important;padding:9px 12px!important}
+}
+@media(max-height:620px) and (max-width:600px){.shell{max-height:87dvh!important}}
+@media(prefers-reduced-motion:reduce){.register-progress:after{transition:none}}
+</style>
 </head>
 <body>
 <main class="shell">
@@ -232,7 +265,7 @@ body {min-height:100dvh!important;display:grid!important;place-items:center!impo
     <header class="login-head">
       <span class="access">Acesso interno</span>
       <h2 id="login-title">Bem-vindo de volta.</h2>
-      <p id="login-subtitle">Entre com seus dados para acessar sua área de trabalho.</p>
+      <p id="login-subtitle">Entre com seu usuário, e-mail ou telefone e senha.</p>
     </header>
     <div class="auth-tabs" role="tablist" aria-label="Acesso ao Wella Flow">
       <button type="button" class="auth-tab" id="tab-login" role="tab" aria-controls="login-form" aria-selected="true" data-auth="login">Entrar</button>
@@ -240,8 +273,8 @@ body {min-height:100dvh!important;display:grid!important;place-items:center!impo
     </div>
     <form id="login-form" role="tabpanel" aria-labelledby="tab-login" novalidate>
       <div class="field">
-        <label for="email">E-mail</label>
-        <div class="control"><input id="email" name="email" inputmode="email" autocomplete="off" type="email" placeholder="seu@email.com" required></div>
+        <label for="email">Usuário, e-mail ou telefone</label>
+        <div class="control"><input id="email" name="identifier" type="text" autocomplete="username" inputmode="text" autocapitalize="none" spellcheck="false" placeholder="@usuario, e-mail ou telefone" required maxlength="120"></div>
       </div>
       <div class="field">
         <label for="password">Senha</label>
@@ -262,16 +295,20 @@ body {min-height:100dvh!important;display:grid!important;place-items:center!impo
       <div class="registration-step" id="register-step-1">
       <div class="field">
         <label for="register-name">Nome completo</label>
-        <div class="control"><input id="register-name" name="name" type="text" autocomplete="off" placeholder="Como podemos chamar você?" required minlength="2" maxlength="90"></div>
+        <div class="control"><input id="register-name" name="name" type="text" autocomplete="name" placeholder="Como podemos chamar você?" required minlength="2" maxlength="90"></div>
       </div>
       <div class="field">
-        <label for="register-email">E-mail</label>
-        <div class="control"><input id="register-email" name="email" inputmode="email" autocomplete="off" type="email" placeholder="seu@email.com" required></div>
+        <label for="register-username">Nome de usuário <span class="optional-tag">opcional</span></label>
+        <div class="control"><input id="register-username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ex.: profissional.joel" minlength="3" maxlength="30"></div>
       </div>
       <div class="field">
-        <label for="register-phone">Telefone (com DDD)</label>
-        <div class="control"><input id="register-phone" name="phone" type="tel" inputmode="numeric" autocomplete="off" placeholder="(22) 99999-9999" maxlength="15" aria-describedby="phone-hint" required></div>
-        <small class="field-hint" id="phone-hint">Para contato e futuras atualizações sobre seus pedidos.</small>
+        <label for="register-email">E-mail <span class="optional-tag">opcional</span></label>
+        <div class="control"><input id="register-email" name="email" inputmode="email" autocomplete="email" type="email" placeholder="seu@email.com"></div>
+      </div>
+      <div class="field">
+        <label for="register-phone">Telefone (com DDD) <span class="optional-tag">opcional</span></label>
+        <div class="control"><input id="register-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(22) 99999-9999" maxlength="15" aria-describedby="phone-hint"></div>
+        <small class="field-hint" id="phone-hint">Preencha pelo menos um entre usuário, e-mail e telefone.</small>
       </div>
         <button class="submit" id="register-next" type="button">Continuar <span class="arrow" aria-hidden="true">↗</span></button>
       </div>
@@ -335,7 +372,7 @@ function showMode(mode){
   loginForm.hidden=registering;
   registerForm.hidden=!registering;
   loginTitle.textContent=registering?'Crie sua conta.':'Bem-vindo de volta.';
-  loginSubtitle.textContent=registering?'Preencha os dados para começar sua experiência no Wella Flow.':'Entre com seus dados para acessar sua área de trabalho.';
+  loginSubtitle.textContent=registering?'Informe seu nome e pelo menos uma forma de acesso.':'Entre com seu usuário, e-mail ou telefone e senha.';
   tabs.forEach(tab=>{
     const selected=tab.dataset.auth===mode;
     tab.setAttribute('aria-selected',String(selected));
@@ -374,14 +411,30 @@ document.querySelectorAll('button[data-show]').forEach(button=>{
   });
 });
 document.querySelector('#recover').addEventListener('click',()=>report(loginStatus,'Recuperação de senha ainda não integrada. Esta é uma demonstração visual.'));
+function parseIdentifier(raw){
+ const value=raw.trim();
+ if(!value)return {valid:false,message:'Preencha seu usuário, e-mail ou telefone.'};
+ if(value.includes('@')&&!value.startsWith('@')){
+  const valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  return {valid,kind:'e-mail',message:'Informe um e-mail válido.'};
+ }
+ const phoneDigits=value.replace(/\D/g,'');
+ if(/^\+?[\d ()-]+$/.test(value)){
+  const valid=/^[1-9][0-9]{9,10}$/.test(phoneDigits);
+  return {valid,kind:'telefone',message:'Informe um telefone válido com DDD.'};
+ }
+ const username=value.startsWith('@')?value.slice(1):value;
+ const valid=/^[a-zA-Z0-9._]{3,30}$/.test(username);
+ return {valid,kind:'usuário',message:'Usuário: 3 a 30 letras, números, pontos ou _.'};
+}
 loginForm.addEventListener('submit',event=>{
   event.preventDefault();
-  const email=document.querySelector('#email');
+  const identifier=document.querySelector('#email');
   const password=document.querySelector('#password');
-  if(!email.value.trim()){report(loginStatus,'Preencha seu e-mail para testar a validação.');email.focus();return;}
-  if(!email.validity.valid){report(loginStatus,'Informe um e-mail em formato válido.');email.focus();return;}
+  const parsed=parseIdentifier(identifier.value);
+  if(!parsed.valid){report(loginStatus,parsed.message);identifier.focus();return;}
   if(password.value.length<6){report(loginStatus,'Use uma senha fictícia com pelo menos 6 caracteres.');password.focus();return;}
-  report(loginStatus,'Campos de login validados. Nenhuma autenticação foi realizada.');
+  report(loginStatus,'Campos de login validados ('+parsed.kind+'). Nenhuma autenticação foi realizada.');
   password.value='';hidePasswords();
 });
 const registerPhone=document.querySelector('#register-phone');
@@ -402,6 +455,7 @@ registerPhone.addEventListener('input',()=>{
 const registrationStep1=document.getElementById('register-step-1');
 const registrationStep2=document.getElementById('register-step-2');
 const registerName=document.getElementById('register-name');
+const registerUsername=document.getElementById('register-username');
 const registerEmail=document.getElementById('register-email');
 const registerPassword=document.getElementById('register-password');
 const registerConfirm=document.getElementById('register-confirm');
@@ -412,25 +466,36 @@ function showRegistrationStep(step,focus){
   registrationStep2.hidden=step!==2;
   document.getElementById('register-progress-step').textContent='Etapa '+step+' de 2';
   document.getElementById('register-progress-label').textContent=step===1?'Dados pessoais':'Segurança';
+  document.querySelector('.register-progress').dataset.step=String(step);
   if(!registerForm.hidden){
     loginTitle.textContent=step===1?'Crie sua conta.':'Último passo.';
-    loginSubtitle.textContent=step===1?'Preencha seus dados para começar.':'Defina sua senha para concluir seu cadastro.';
+    loginSubtitle.textContent=step===1?'Nome completo e ao menos um entre usuário, e-mail ou telefone.':'Defina sua senha para concluir seu cadastro.';
   }
   clearStatus(registerStatus);
   if(focus)(step===1?registerName:registerPassword).focus();
 }
 function validatePersonalDetails(){
+  const username=registerUsername.value.trim();
+  const email=registerEmail.value.trim();
+  const phone=digitsOnly(registerPhone.value);
   if(registerName.value.trim().length<2){
     report(registerStatus,'Informe seu nome com pelo menos 2 caracteres.');
     registerName.focus();return false;
   }
-  if(!registerEmail.value.trim()||!registerEmail.validity.valid){
-    report(registerStatus,'Informe um e-mail válido para o cadastro.');
+  if(!username&&!email&&!phone){
+    report(registerStatus,'Informe pelo menos um: usuário, e-mail ou telefone.');
+    registerUsername.focus();return false;
+  }
+  if(username&&!/^[a-zA-Z0-9._]{3,30}$/.test(username)){
+    report(registerStatus,'Usuário: 3 a 30 letras, números, pontos ou _.');
+    registerUsername.focus();return false;
+  }
+  if(email&&!registerEmail.validity.valid){
+    report(registerStatus,'Informe um e-mail válido ou deixe vazio.');
     registerEmail.focus();return false;
   }
-  const phoneDigits=digitsOnly(registerPhone.value);
-  if(!/^[1-9][0-9]{9,10}$/.test(phoneDigits)){
-    report(registerStatus,'Informe um telefone brasileiro com DDD: 10 ou 11 dígitos.');
+  if(phone&&!/^[1-9][0-9]{9,10}$/.test(phone)){
+    report(registerStatus,'Informe um telefone válido com DDD ou deixe vazio.');
     registerPhone.focus();return false;
   }
   return true;
