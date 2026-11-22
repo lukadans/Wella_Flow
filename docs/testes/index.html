@@ -22,15 +22,16 @@ function customerTitle(name) {
 }
 function CustomerProfile({user}) {
   const name = user?.name?.trim() || "Perfil do cliente";
-  const initials = user?.name?.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join("").toUpperCase();
   const rawDate = user?.lastPurchase?.purchasedAt;
   const date = rawDate ? new Date(rawDate) : null;
   const valid = date && Number.isFinite(date.getTime());
   const [failedPhoto,setFailedPhoto] = Jl.useState(null);
+  const hasPhoto = typeof user?.photoUrl === "string" &&
+    user.photoUrl.trim().length > 0 && user.photoUrl !== failedPhoto;
   return z.createElement("section",{className:"customer-space","aria-label":"Perfil do cliente"},
-    z.createElement("div",{className:"profile-avatar"},user?.photoUrl && user.photoUrl!==failedPhoto ?
-      z.createElement("img",{src:user.photoUrl,alt:"",onError:()=>setFailedPhoto(user.photoUrl)}) :
-      initials || z.createElement("svg",{viewBox:"0 0 24 24",width:28,height:28,fill:"none",stroke:"currentColor","aria-hidden":true},z.createElement("circle",{cx:12,cy:8,r:4}),z.createElement("path",{d:"M4 21a8 8 0 0 1 16 0"}))),
+    hasPhoto ? z.createElement("div",{className:"profile-avatar"},
+      z.createElement("img",{src:user.photoUrl,alt:"Foto do cliente",
+        onError:()=>setFailedPhoto(user.photoUrl)})) : null,
     z.createElement("h2",null,name),
     z.createElement("small",null,"Última compra"),
     z.createElement("p",null,valid?date.toLocaleDateString("pt-BR"):"Sem compra registrada"));
