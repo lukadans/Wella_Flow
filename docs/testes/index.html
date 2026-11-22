@@ -558,40 +558,48 @@ body.wella-auth-locked{overflow:hidden!important}
 <link rel="stylesheet" href="./silver-navigation.css">
 
 <style id="wella-mobile-order-rail-style">
+/* Botão discreto e acessível no mobile, sem painel intermediário. */
 .mobile-order-rail-preview { display: none; }
 @media (max-width: 760px) {
   .page-header .draft-button { display: none !important; }
   .mobile-order-rail-preview {
-    position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px));
-    bottom: calc(126px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center;
+    position: fixed; z-index: 20;
+    right: max(0px, env(safe-area-inset-right, 0px));
+    bottom: calc(166px + env(safe-area-inset-bottom, 0px));
+    display: flex; align-items: center;
   }
   .mobile-order-rail-preview__toggle {
-    position: relative; display: grid; place-items: center; width: 54px; height: 58px;
-    padding: 0; border: 1px solid var(--border); border-right: 0; border-radius: 16px 0 0 16px;
-    background: var(--surface); color: var(--accent); box-shadow: 0 8px 24px #0005;
+    position: relative; display: grid; place-items: center;
+    width: 54px; height: 58px; padding: 0;
+    border: 1px solid var(--border); border-right: 0;
+    border-radius: 16px 0 0 16px;
+    background: var(--surface); color: var(--accent);
+    box-shadow: 0 8px 24px #0005;
+    cursor: pointer; touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: box-shadow 180ms ease, background-color 180ms ease;
   }
-  .mobile-order-rail-preview__toggle:focus-visible { outline-offset: -4px; }
+  .mobile-order-rail-preview__toggle:active { box-shadow: 0 4px 16px #0005; }
+  .mobile-order-rail-preview__toggle:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: -4px;
+  }
   .mobile-order-rail-preview__count {
     position: absolute; top: -6px; left: -7px; display: grid; place-items: center;
     min-width: 21px; height: 21px; padding: 0 5px; border: 2px solid var(--bg);
     border-radius: 50px; background: var(--accent); color: var(--on-accent);
     font-size: 11px; font-weight: 800;
   }
-  .mobile-order-rail-preview__panel {
-    position: absolute; right: 54px; bottom: 0; width: min(280px, calc(100vw - 78px));
-    padding: 14px; border: 1px solid var(--border); border-radius: 16px;
-    background: var(--surface); box-shadow: 0 12px 32px #0006; color: var(--text);
-    animation: wella-order-rail-in 180ms ease-out both;
+  /* O backdrop se materializa junto da expansão do modal de pedidos. */
+  dialog.wella-order-liquid[open]::backdrop {
+    animation: wella-order-backdrop-in 360ms ease-out both;
   }
-  .mobile-order-rail-preview__panel[hidden] { display: none; }
-  .mobile-order-rail-preview__panel[role="button"] {
-    display: block; color: var(--text); text-align: left; font: inherit; cursor: pointer;
+  @keyframes wella-order-backdrop-in {
+    from { background: #050a1200; }
+    to { background: #050a12be; }
   }
-  .mobile-order-rail-preview__panel[role="button"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .mobile-order-rail-preview__panel[role="button"]:hover { border-color: var(--accent); }
-  .mobile-order-rail-preview__panel header { display: flex; align-items: center; justify-content: flex-start; gap: 12px; }
-  .mobile-order-rail-preview__summary { margin: 11px 0 13px; color: var(--muted); font-size: 13px; }
-  @keyframes wella-order-rail-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.wella-order-liquid[open]::backdrop { animation: none; }
 }
 </style>
 
@@ -644,83 +652,101 @@ body.wella-auth-locked{overflow:hidden!important}
   const root = document.getElementById('root');
   if (!root) return;
   let rail = null;
+  let badge = null;
 
+  // O clique fora fecha a janela nativa; clique no conteúdo não a fecha.
   const bindDialogDismiss = () => {
     root.querySelectorAll('dialog').forEach(dialog => {
       if (dialog.dataset.dismissOnBackdrop === 'true') return;
       dialog.dataset.dismissOnBackdrop = 'true';
       dialog.addEventListener('click', event => {
-        if (event.target === dialog) dialog.close();
+        if (event.target !== dialog) return;
+        const rect = dialog.getBoundingClientRect();
+        const outside = event.clientX < rect.left || event.clientX > rect.right ||
+          event.clientY < rect.top || event.clientY > rect.bottom;
+        if (outside && dialog.open) dialog.close();
       });
+    });
+  };
+
+  const refreshCount = () => {
+    if (!badge) return;
+    const reviewButton = root.querySelector('.page-header .draft-button');
+    const count = reviewButton?.querySelector('.count')?.textContent?.trim() || '0';
+    badge.textContent = String(Number(count) || 0);
+  };
+
+  // A janela de revisão parte da posição do botão, como uma gota se expandindo.
+  const animateLiquidOpen = (dialog, sourceRect) => {
+    if (!dialog?.open || !sourceRect ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      typeof dialog.animate !== 'function') return;
+
+    const target = dialog.getBoundingClientRect();
+    if (!target.width || !target.height) return;
+    const dx = sourceRect.left + sourceRect.width / 2 - (target.left + target.width / 2);
+    const dy = sourceRect.top + sourceRect.height / 2 - (target.top + target.height / 2);
+    const sx = Math.max(0.08, Math.min(0.75, sourceRect.width / target.width));
+    const sy = Math.max(0.08, Math.min(0.75, sourceRect.height / target.height));
+
+    dialog.animate([
+      {
+        transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(' + sx + ', ' + sy + ')',
+        borderRadius: '28px', opacity: 0.65, offset: 0
+      },
+      {
+        transform: 'translate(0, 0) scale(1.035, .975)',
+        borderRadius: '23px', opacity: 1, offset: 0.72
+      },
+      {
+        transform: 'translate(0, 0) scale(1, 1)',
+        borderRadius: '16px', opacity: 1, offset: 1
+      }
+    ], { duration: 480, easing: 'cubic-bezier(.2, .86, .25, 1)' });
+  };
+
+  const openReview = () => {
+    // Busca o elemento atual, evitando referência antiga após rerender do React.
+    const reviewButton = root.querySelector('.page-header .draft-button');
+    if (!reviewButton) return;
+    const sourceRect = rail?.querySelector('button')?.getBoundingClientRect();
+    reviewButton.click(); // Abre diretamente o modal real; sem etapa de "revisar pedido".
+    requestAnimationFrame(() => {
+      const dialog = root.querySelector('dialog[aria-labelledby="draft-title"]');
+      if (!dialog?.open) return;
+      dialog.classList.add('wella-order-liquid');
+      animateLiquidOpen(dialog, sourceRect);
     });
   };
 
   const install = () => {
     bindDialogDismiss();
-    const reviewButton = root.querySelector('.page-header .draft-button');
-    if (!reviewButton || root.querySelector('.mobile-order-rail')) return;
-    if (rail) return;
+    if (rail || !root.querySelector('.page-header .draft-button')) {
+      refreshCount();
+      return;
+    }
 
     rail = document.createElement('aside');
     rail.className = 'mobile-order-rail-preview';
     rail.setAttribute('aria-label', 'Pedido atual');
 
-    const panel = document.createElement('div');
-    panel.className = 'mobile-order-rail-preview__panel';
-    panel.id = 'mobile-order-summary-preview';
-    panel.setAttribute('role', 'button');
-    panel.setAttribute('aria-label', 'Abrir revisão do pedido');
-    panel.tabIndex = 0;
-    panel.hidden = true;
-
-    const heading = document.createElement('header');
-    const title = document.createElement('strong');
-    title.textContent = 'Meu pedido';
-    heading.append(title);
-
-    const summary = document.createElement('p');
-    summary.className = 'mobile-order-rail-preview__summary';
-    panel.append(heading, summary);
-
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'mobile-order-rail-preview__toggle';
-    toggle.setAttribute('aria-label', 'Expandir pedido');
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-controls', panel.id);
+    toggle.setAttribute('aria-label', 'Abrir pedido');
+    toggle.title = 'Abrir pedido';
     toggle.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7Z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg><span class="mobile-order-rail-preview__count">0</span>';
-    rail.append(panel, toggle);
+    toggle.addEventListener('click', openReview);
+    rail.append(toggle);
     document.body.append(rail);
-
-    const setOpen = open => {
-      panel.hidden = !open;
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Recolher pedido' : 'Expandir pedido');
-    };
-    const openReview = () => {
-      setOpen(false);
-      reviewButton.click();
-    };
-    toggle.addEventListener('click', () => setOpen(panel.hidden));
-    panel.addEventListener('click', openReview);
-    panel.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openReview();
-      }
-    });
-
-    const badge = rail.querySelector('.mobile-order-rail-preview__count');
-    const refresh = () => {
-      const value = reviewButton.querySelector('.count')?.textContent?.trim() || '0';
-      const units = Number(value) || 0;
-      badge.textContent = String(units);
-      summary.textContent = units + (units === 1 ? ' unidade no pedido' : ' unidades no pedido');
-    };
-    refresh();
-    new MutationObserver(refresh).observe(root, { childList: true, subtree: true, characterData: true });
+    badge = rail.querySelector('.mobile-order-rail-preview__count');
+    refreshCount();
   };
-  new MutationObserver(install).observe(root, { childList: true, subtree: true });
+
+  // Instala depois da renderização e acompanha a contagem do carrinho.
+  new MutationObserver(install).observe(root, {
+    childList: true, subtree: true, characterData: true
+  });
   install();
 })();
 </script>
