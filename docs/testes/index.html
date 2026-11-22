@@ -556,6 +556,42 @@ body.wella-auth-locked{overflow:hidden!important}
     document.documentElement.classList.add('wf-silver-nav');
 </script>
 <link rel="stylesheet" href="./silver-navigation.css">
+
+<style id="wella-mobile-order-rail-style">
+.mobile-order-rail-preview { display: none; }
+@media (max-width: 760px) {
+  .page-header .draft-button { display: none !important; }
+  .mobile-order-rail-preview {
+    position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px));
+    bottom: calc(104px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center;
+  }
+  .mobile-order-rail-preview__toggle {
+    position: relative; display: grid; place-items: center; width: 54px; height: 58px;
+    padding: 0; border: 1px solid var(--border); border-right: 0; border-radius: 16px 0 0 16px;
+    background: var(--surface); color: var(--accent); box-shadow: 0 8px 24px #0005;
+  }
+  .mobile-order-rail-preview__toggle:focus-visible { outline-offset: -4px; }
+  .mobile-order-rail-preview__count {
+    position: absolute; top: -6px; left: -7px; display: grid; place-items: center;
+    min-width: 21px; height: 21px; padding: 0 5px; border: 2px solid var(--bg);
+    border-radius: 50px; background: var(--accent); color: var(--on-accent);
+    font-size: 11px; font-weight: 800;
+  }
+  .mobile-order-rail-preview__panel {
+    position: absolute; right: 54px; bottom: 0; width: min(280px, calc(100vw - 78px));
+    padding: 14px; border: 1px solid var(--border); border-radius: 16px;
+    background: var(--surface); box-shadow: 0 12px 32px #0006; color: var(--text);
+    animation: wella-order-rail-in 180ms ease-out both;
+  }
+  .mobile-order-rail-preview__panel[hidden] { display: none; }
+  .mobile-order-rail-preview__panel header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .mobile-order-rail-preview__close { min-height: 36px; width: 36px; padding: 0; border-radius: 9px; }
+  .mobile-order-rail-preview__summary { margin: 11px 0 13px; color: var(--muted); font-size: 13px; }
+  .mobile-order-rail-preview__review { width: 100%; min-height: 42px; }
+  @keyframes wella-order-rail-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+}
+</style>
+
 </head>
   <body>
     <!-- O catálogo aprovado mantém as duas barras. O seletor "Testar visual" foi removido. -->
@@ -599,5 +635,78 @@ body.wella-auth-locked{overflow:hidden!important}
   });
 })();
 </script>
+
+<script id="wella-mobile-order-rail">
+(() => {
+  const root = document.getElementById('root');
+  if (!root) return;
+  let rail = null;
+  const install = () => {
+    const reviewButton = root.querySelector('.page-header .draft-button');
+    if (!reviewButton || root.querySelector('.mobile-order-rail')) return;
+    if (rail) return;
+
+    rail = document.createElement('aside');
+    rail.className = 'mobile-order-rail-preview';
+    rail.setAttribute('aria-label', 'Pedido atual');
+
+    const panel = document.createElement('div');
+    panel.className = 'mobile-order-rail-preview__panel';
+    panel.id = 'mobile-order-summary-preview';
+    panel.hidden = true;
+
+    const heading = document.createElement('header');
+    const title = document.createElement('strong');
+    title.textContent = 'Meu pedido';
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'icon-button mobile-order-rail-preview__close';
+    close.setAttribute('aria-label', 'Fechar resumo do pedido');
+    close.textContent = '×';
+    heading.append(title, close);
+
+    const summary = document.createElement('p');
+    summary.className = 'mobile-order-rail-preview__summary';
+
+    const review = document.createElement('button');
+    review.type = 'button';
+    review.className = 'primary mobile-order-rail-preview__review';
+    review.textContent = 'Revisar pedido';
+    panel.append(heading, summary, review);
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'mobile-order-rail-preview__toggle';
+    toggle.setAttribute('aria-label', 'Expandir pedido');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', panel.id);
+    toggle.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7Z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg><span class="mobile-order-rail-preview__count">0</span>';
+    rail.append(panel, toggle);
+    document.body.append(rail);
+
+    const setOpen = open => {
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Recolher pedido' : 'Expandir pedido');
+    };
+    toggle.addEventListener('click', () => setOpen(panel.hidden));
+    close.addEventListener('click', () => setOpen(false));
+    review.addEventListener('click', () => { setOpen(false); reviewButton.click(); });
+
+    const badge = rail.querySelector('.mobile-order-rail-preview__count');
+    const refresh = () => {
+      const value = reviewButton.querySelector('.count')?.textContent?.trim() || '0';
+      const units = Number(value) || 0;
+      badge.textContent = String(units);
+      summary.textContent = units + (units === 1 ? ' unidade no pedido' : ' unidades no pedido');
+    };
+    refresh();
+    new MutationObserver(refresh).observe(root, { childList: true, subtree: true, characterData: true });
+  };
+  new MutationObserver(install).observe(root, { childList: true, subtree: true });
+  install();
+})();
+</script>
+
 </body>
 </html>
