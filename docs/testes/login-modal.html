@@ -277,7 +277,7 @@ body {min-height:100dvh!important;display:grid!important;place-items:center!impo
       <p id="register-status" class="status" aria-live="polite" hidden></p>
       <p class="switch-hint">Já possui uma conta? <button type="button" class="text-action" data-switch="login">Entrar</button></p>
     </form>
-    <aside class="demo-notice"><strong>Protótipo visual.</strong> Entrar e criar conta apenas validam os campos nesta página. Nenhuma conta é criada e nenhuma informação é enviada ou armazenada. Não informe senhas reais.</aside>
+    <aside class="demo-notice"><strong>Protótipo visual.</strong> Entrar e criar conta apenas validam os campos nesta página. Nenhuma conta é criada e nenhuma informação é enviada ou armazenada. Não informe senhas reais.<div class="preview-access"><button type="button" id="preview-catalog">Visualizar catálogo — demonstração</button></div></aside>
   </section>
 </main>
 <script>
@@ -440,7 +440,6 @@ registerForm.addEventListener('submit',event=>{
 });
 </script>
 
-<div class="preview-access"><button type="button" id="preview-catalog">Visualizar catálogo — demonstração</button></div>
 <script>
 document.getElementById('preview-catalog').addEventListener('click',()=>{
   window.parent.postMessage({type:'wella-flow:preview-catalog'},window.location.origin);
