@@ -419,7 +419,9 @@ function parseIdentifier(raw){
   return {valid,kind:'e-mail',message:'Informe um e-mail válido.'};
  }
  const phoneDigits=value.replace(/\D/g,'');
- if(/^\+?[\d ()-]+$/.test(value)){
+ const looksLikePhone=/^\+?[\d ()-]+$/.test(value);
+ const hasPhoneFormatting=/[+()\s-]/.test(value);
+ if(looksLikePhone&&(hasPhoneFormatting||phoneDigits.length===10||phoneDigits.length===11)){
   const valid=/^[1-9][0-9]{9,10}$/.test(phoneDigits);
   return {valid,kind:'telefone',message:'Informe um telefone válido com DDD.'};
  }
