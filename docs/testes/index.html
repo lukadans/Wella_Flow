@@ -881,6 +881,99 @@ dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.field textarea {
   .draft-product-card,.draft-product-card__art img{transition:none!important}
 }
 </style>
+
+<style id="wella-mobile-bottom-toolbar-v5">
+/* No celular, a navegação existente do cabeçalho passa a ser um dock inferior. */
+@media(max-width:760px){
+  html[data-design] main .page-header,
+  html[data-design] main .page-header.catalog-actions {
+    display:block!important;
+    min-height:0!important;
+    height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    background:transparent!important;
+  }
+  html[data-design] main .page-header .floating-links {
+    position:fixed!important;
+    inset:auto 0 0 0!important;
+    top:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    box-sizing:border-box!important;
+    z-index:19!important;
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+    gap:3px!important;
+    margin:0!important;
+    padding:7px max(7px,env(safe-area-inset-right,0px))
+      calc(7px + env(safe-area-inset-bottom,0px))
+      max(7px,env(safe-area-inset-left,0px))!important;
+    border-top:1px solid var(--border)!important;
+    border-radius:16px 16px 0 0!important;
+    background:color-mix(in srgb,var(--sidebar) 94%,transparent)!important;
+    box-shadow:0 -7px 28px #0006!important;
+    -webkit-backdrop-filter:blur(18px) saturate(1.15);
+    backdrop-filter:blur(18px) saturate(1.15);
+  }
+  html[data-design] main .page-header .floating-links .nav-item,
+  html[data-design] main .page-header .floating-links .nav-item[aria-current=page] {
+    box-sizing:border-box!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:center!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:55px!important;
+    margin:0!important;
+    padding:5px 2px!important;
+    gap:4px!important;
+    font-size:10px!important;
+    line-height:1.12!important;
+    text-align:center!important;
+    white-space:normal!important;
+    border:0!important;
+    border-radius:12px!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:var(--muted)!important;
+    transition:background .18s ease,color .18s ease;
+  }
+  html[data-design] main .page-header .floating-links .nav-item[aria-current=page] {
+    color:var(--accent)!important;
+    background:color-mix(in srgb,var(--accent) 11%,transparent)!important;
+  }
+  html[data-design] main .page-header .floating-links .nav-item svg {
+    width:20px!important;
+    height:20px!important;
+    flex-shrink:0;
+  }
+  html[data-design] main .page-header .floating-links .nav-item span {
+    text-align:center;
+    overflow-wrap:anywhere;
+    font-size:inherit!important;
+  }
+  html[data-design] main .page-header .floating-links .nav-item:focus-visible {
+    outline:2px solid var(--accent)!important;
+    outline-offset:-2px;
+  }
+  html[data-design] main {
+    padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important;
+  }
+  /* O carrinho fica acima do dock sem perder seu tamanho ou sua animação. */
+  .mobile-order-rail-preview {
+    bottom:calc(91px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+@media(max-width:760px) and (prefers-reduced-motion:reduce){
+  html[data-design] main .page-header .floating-links .nav-item{transition:none!important}
+}
+</style>
 </head>
   <body>
     <!-- O catálogo aprovado mantém as duas barras. O seletor "Testar visual" foi removido. -->
