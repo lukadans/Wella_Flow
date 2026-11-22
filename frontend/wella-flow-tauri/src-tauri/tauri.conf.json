@@ -1,0 +1,17 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Wella Flow",
+  "version": "0.1.0",
+  "identifier": "com.lukadans.wellaflow",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [{"label":"main","title":"Wella Flow","width":1280,"height":820,"minWidth":360,"minHeight":560}],
+    "security": {"csp":"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: asset:; font-src 'self' data:; connect-src 'self'"}
+  },
+  "bundle": {"active":true,"targets":"all","icon":["icons/icon.png","icons/icon.ico","icons/icon.icns"]}
+}
