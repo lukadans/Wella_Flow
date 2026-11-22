@@ -191,7 +191,7 @@ function App() {
     </aside>
 
     <aside className={`mobile-order-rail${orderRailOpen ? ' is-open' : ''}`} aria-label="Pedido atual">
-      {orderRailOpen && <div className="mobile-order-rail__panel" id="mobile-order-summary">
+      <div className="mobile-order-rail__panel" id="mobile-order-summary" hidden={!orderRailOpen}>
         <header><strong>Meu pedido</strong>
           <button type="button" className="icon-button" aria-label="Fechar resumo do pedido" onClick={() => setOrderRailOpen(false)}><X size={18}/></button>
         </header>
@@ -200,7 +200,7 @@ function App() {
           setOrderRailOpen(false);
           dialog.current.showModal();
         }}><ShoppingBag size={17}/> Revisar pedido</button>
-      </div>}
+      </div>
       <button type="button" className="mobile-order-rail__toggle" aria-label={orderRailOpen ? 'Recolher pedido' : 'Expandir pedido'}
         aria-expanded={orderRailOpen} aria-controls="mobile-order-summary" onClick={() => setOrderRailOpen(open => !open)}>
         <ShoppingBag size={20}/><span className="mobile-order-rail__count">{unitCount}</span>
