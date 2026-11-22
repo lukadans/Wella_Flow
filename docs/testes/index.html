@@ -37,9 +37,9 @@ function CustomerProfile({user}) {
     z.createElement("p",null,valid?date.toLocaleDateString("pt-BR"):"Sem compra registrada"));
 }
 function x1(){const [preview,setPreview]=Jl.useState(null);const[b,Z]=Jl.useState("catalog"),[X,h]=Jl.useState(""),[J,ll]=Jl.useState("Todos"),[w,mt]=cn("wella-flow-visual-test-theme","dark"),[rl,Ol]=cn("wella-flow-visual-test-favorites",[]),[B,S]=cn("wella-flow-visual-test-draft",{}),[Y,Nl]=cn("wella-flow-visual-test-note",""),[itemNotes,setItemNotes]=cn("wella-flow-visual-test-item-notes",{}),[wl,Yl]=cn("wella-flow-visual-test-orders",[]),[nl,kl]=Jl.useState({text:"",tick:0}),Cl=Jl.useRef(null),Zt=Jl.useRef(null),st=my.find(_=>_.id===b).label,Gl=Object.entries(B).flatMap(([_,N])=>{const D=Ea[_];return D?[{sku:_,name:D.name,price:D.price,quantity:N,line:D.line,type:D.type,size:D.size,itemNote:itemNotes[_]??""}]:[]}),Il=Gl.reduce((_,N)=>_+N.quantity,0),L=[...new Set([...rl,...Mo.map(_=>_.sku)])].slice(0,3),k=Mo.filter(_=>(b!=="favorites"||rl.includes(_.sku))&&(J==="Todos"||_.type===J)&&sy(`${_.name} ${_.line} ${_.sku}`).includes(sy(X.trim())));Jl.useEffect(()=>{document.documentElement.dataset.theme=w},[w]),Jl.useEffect(()=>{if(!nl.text)return;const _=setTimeout(()=>kl(N=>({...N,text:""})),2600);return()=>clearTimeout(_)},[nl]);function vt(_){Z(_),h(""),ll("Todos"),window.scrollTo(0,0),Zt.current.focus({preventScroll:!0})}function Fl(_,N){S(D=>{const R={...D},F=(R[_]??0)+N;return F>0?R[_]=F:delete R[_],R})}function $l(_){kl(N=>({text:_,tick:N.tick+1}))}function Pl(_){_.preventDefault(),Gl.length&&(Yl(N=>[{number:(N[0]?.number??0)+1,items:Gl,note:Y.trim(),createdAt:Date.now(),status:Do},...N]),S({}),setItemNotes({}),Nl(""),Cl.current.close(),vt("orders"),$l("Pedido enviado para análise local."))}function Vt(_,N,D){Yl(R=>R.map(F=>F.number===_&&F.status===Do?{...F,status:N,reviewNote:D}:F)),$l("Decisão registrada.")}function uu(_){S(N=>{const D={...N};return _.forEach(({sku:R,quantity:F})=>{Ea[R]&&(D[R]=(D[R]??0)+F)}),D}),setItemNotes(N=>({...N,...Object.fromEntries(_.map(D=>[D.sku,D.itemNote??""]))})),Cl.current.showModal()}return z.createElement(z.Fragment,null,z.createElement("header",{className:"mobile-header"},z.createElement("div",{className:"brand"},z.createElement("img",{className:"salon-logo",src:salonLogo,alt:"Joel Beauty Center"}),z.createElement("span",null,customerTitle(window.wellaFlowSession?.user?.name))),z.createElement("button",{type:"button",className:"icon-button","aria-label":w==="dark"?"Ativar tema claro":"Ativar tema escuro",onClick:()=>mt(w==="dark"?"light":"dark")},w==="dark"?z.createElement(oy,{size:20}):z.createElement(iy,{size:20}))),z.createElement("aside",{className:"sidebar"},z.createElement("div",{className:"brand"},z.createElement("img",{className:"salon-logo",src:salonLogo,alt:"Joel Beauty Center"}),z.createElement("span",null,"Wella Flow")),z.createElement(CustomerProfile,{user:window.wellaFlowSession?.user}),(b==="catalog"||b==="favorites")&&z.createElement("section",{className:"side-description","aria-label":"Descrição do produto"},
-z.createElement("small",null,"Descrição do produto"),preview&&k.includes(preview)?z.createElement(z.Fragment,null,z.createElement("h3",null,preview.name),z.createElement("p",null,describeProduct(preview))):z.createElement("p",null,"Passe o cursor sobre um produto para ver os detalhes.")),z.createElement("button",{type:"button",className:"theme-button",onClick:()=>mt(w==="dark"?"light":"dark")},w==="dark"?z.createElement(oy,{size:19}):z.createElement(iy,{size:19}),w==="dark"?"Tema claro":"Tema escuro")),z.createElement("main",{ref:Zt,tabIndex:-1,"aria-label":"Área de trabalho"},z.createElement("div",{className:b==="catalog"?"page-header catalog-actions":"page-header"},z.createElement("nav",{className:"floating-links","aria-label":"Navegação principal"},my.map(({id:_,label:N,Icon:D})=>z.createElement("button",{type:"button",className:"nav-item",key:_,"aria-current":_===b?"page":void 0,onClick:()=>vt(_)},z.createElement(D,{size:19}),z.createElement("span",null,N)))),z.createElement("h1",{className:"visually-hidden"},st),z.createElement("button",{type:"button",className:"primary draft-button",onClick:()=>Cl.current.showModal()},z.createElement(R1,{size:18}),z.createElement("span",null,"Revisar pedido"),z.createElement("span",{className:"count"},Il))),b==="catalog"&&z.createElement("section",{className:"hero","aria-labelledby":"selection"},z.createElement("div",{className:"hero-content"},z.createElement("p",{className:"eyebrow"},"Seleção para Salões de Beleza"),z.createElement("h2",{id:"selection"},"Sua seleção ",z.createElement("em",null,"de produtos")),z.createElement("div",{className:"shortcuts"},L.map(_=>z.createElement("button",{type:"button",key:_,title:Ea[_].name,onClick:()=>{h(_),ll("Todos")}},Ea[_].type," · ",Ea[_].size,z.createElement(_1,{size:14}))))),z.createElement("div",{className:"hero-photo","aria-hidden":"true"},z.createElement("img",{src:Ea.D01.image,alt:"",className:"hero-shampoo"}),z.createElement("img",{src:Ea.D03.image,alt:"",className:"hero-oil"}))),(b==="catalog"||b==="favorites")&&z.createElement("section",{className:"catalog","aria-label":"Produtos"},z.createElement("div",{className:"tools"},z.createElement("label",{className:"search"},z.createElement(C1,{size:19}),z.createElement("input",{type:"search","aria-label":"Buscar produto",placeholder:"Buscar por produto, linha ou SKU",value:X,onChange:_=>h(_.target.value)})),z.createElement("div",{className:"filters","aria-label":"Filtrar por tipo"},Q1.map(_=>z.createElement("button",{type:"button",key:_,"aria-pressed":_===J,onClick:()=>ll(_)},_)))),z.createElement("p",{className:"results"},k.length," ",k.length===1?"produto":"produtos"," · Catálogo de demonstração"),k.length?z.createElement("div",{className:"product-grid"},k.map(_=>z.createElement(Z1,{product:_,key:_.sku,onPreview:setPreview,expanded:preview===_,favorite:rl.includes(_.sku),onFavorite:()=>Ol(N=>N.includes(_.sku)?N.filter(D=>D!==_.sku):[...N,_.sku]),onAdd:()=>{Fl(_.sku,1),$l("Produto adicionado ao pedido.")}}))):z.createElement("p",{className:"empty"},b==="favorites"&&!rl.length?"Toque no coração de um produto para salvá-lo aqui.":"Nenhum produto encontrado.")),(b==="orders"||b==="review")&&z.createElement("section",{className:"order-list","aria-label":st},wl.length?wl.map(_=>z.createElement(V1,{key:_.number,order:_,review:b==="review",onDecision:Vt,onRepeat:uu})):z.createElement("p",{className:"empty"},b==="review"?"Os pedidos enviados para análise aparecem aqui.":"Ainda não há pedidos neste dispositivo."))),z.createElement("dialog",{ref:Cl,"aria-labelledby":"draft-title"},z.createElement("form",{className:"draft",onSubmit:Pl},z.createElement("header",null,z.createElement("h2",{id:"draft-title"},"Revisar pedido"),z.createElement("button",{type:"button",className:"icon-button","aria-label":"Fechar revisão",onClick:()=>Cl.current.close()},z.createElement(H1,{size:22}))),Gl.length?z.createElement(z.Fragment,null,z.createElement("ul",{className:"draft-items"},Gl.map(_=>z.createElement("li",{key:_.sku,className:"draft-product-card"},
+z.createElement("small",null,"Descrição do produto"),preview&&k.includes(preview)?z.createElement(z.Fragment,null,z.createElement("h3",null,preview.name),z.createElement("p",null,describeProduct(preview))):z.createElement("p",null,"Passe o cursor sobre um produto para ver os detalhes.")),z.createElement("button",{type:"button",className:"theme-button",onClick:()=>mt(w==="dark"?"light":"dark")},w==="dark"?z.createElement(oy,{size:19}):z.createElement(iy,{size:19}),w==="dark"?"Tema claro":"Tema escuro")),z.createElement("main",{ref:Zt,tabIndex:-1,"aria-label":"Área de trabalho"},z.createElement("div",{className:b==="catalog"?"page-header catalog-actions":"page-header"},z.createElement("nav",{className:"floating-links","aria-label":"Navegação principal"},my.map(({id:_,label:N,Icon:D})=>z.createElement("button",{type:"button",className:"nav-item",key:_,"aria-current":_===b?"page":void 0,onClick:()=>vt(_)},z.createElement(D,{size:19}),z.createElement("span",null,N)))),z.createElement("h1",{className:"visually-hidden"},st),z.createElement("button",{type:"button",className:"primary draft-button",onClick:()=>Cl.current.showModal()},z.createElement(R1,{size:18}),z.createElement("span",null,"Revisar pedido"),z.createElement("span",{className:"count"},Il))),b==="catalog"&&z.createElement("section",{className:"hero","aria-labelledby":"selection"},z.createElement("div",{className:"hero-content"},z.createElement("p",{className:"eyebrow"},"Seleção para Salões de Beleza"),z.createElement("h2",{id:"selection"},"Sua seleção ",z.createElement("em",null,"de produtos")),z.createElement("div",{className:"shortcuts"},L.map(_=>z.createElement("button",{type:"button",key:_,title:Ea[_].name,onClick:()=>{h(_),ll("Todos")}},Ea[_].type," · ",Ea[_].size,z.createElement(_1,{size:14}))))),z.createElement("div",{className:"hero-photo","aria-hidden":"true"},z.createElement("img",{src:Ea.D01.image,alt:"",className:"hero-shampoo"}),z.createElement("img",{src:Ea.D03.image,alt:"",className:"hero-oil"}))),(b==="catalog"||b==="favorites")&&z.createElement("section",{className:"catalog","aria-label":"Produtos"},z.createElement("div",{className:"tools"},z.createElement("label",{className:"search"},z.createElement(C1,{size:19}),z.createElement("input",{type:"search","aria-label":"Buscar produto",placeholder:"Buscar por produto, linha ou SKU",value:X,onChange:_=>h(_.target.value)})),z.createElement("div",{className:"filters","aria-label":"Filtrar por tipo"},Q1.map(_=>z.createElement("button",{type:"button",key:_,"aria-pressed":_===J,onClick:()=>ll(_)},_)))),z.createElement("p",{className:"results"},k.length," ",k.length===1?"produto":"produtos"," · Catálogo de demonstração"),k.length?z.createElement("div",{className:"product-grid"},k.map(_=>z.createElement(Z1,{product:_,key:_.sku,onPreview:setPreview,expanded:preview===_,favorite:rl.includes(_.sku),onFavorite:()=>Ol(N=>N.includes(_.sku)?N.filter(D=>D!==_.sku):[...N,_.sku]),onAdd:()=>{Fl(_.sku,1),$l("Produto adicionado ao pedido.")}}))):z.createElement("p",{className:"empty"},b==="favorites"&&!rl.length?"Toque no coração de um produto para salvá-lo aqui.":"Nenhum produto encontrado.")),(b==="orders"||b==="review")&&z.createElement("section",{className:"order-list","aria-label":st},wl.length?wl.map(_=>z.createElement(V1,{key:_.number,order:_,review:b==="review",onDecision:Vt,onRepeat:uu})):z.createElement("p",{className:"empty"},b==="review"?"Os pedidos enviados para análise aparecem aqui.":"Ainda não há pedidos neste dispositivo."))),z.createElement("dialog",{ref:Cl,"aria-labelledby":"draft-title"},z.createElement("form",{className:"draft",onSubmit:Pl},z.createElement("header",{className:"wella-draft-header"},z.createElement("div",{className:"wella-draft-header__copy"},z.createElement("span",{className:"wella-draft-header__eyebrow"},"WELLA FLOW · SELEÇÃO"),z.createElement("h2",{id:"draft-title"},"Seu carrinho"),z.createElement("p",{className:"wella-draft-header__caption"},Il," ",Il===1?"unidade":"unidades"," em ",Gl.length," ",Gl.length===1?"produto":"produtos"," · Revisão do pedido")),z.createElement("button",{type:"button",className:"icon-button","aria-label":"Fechar carrinho",onClick:()=>Cl.current.close()},z.createElement(H1,{size:22}))),Gl.length?z.createElement(z.Fragment,null,z.createElement("ul",{className:"draft-items"},Gl.map(_=>z.createElement("li",{key:_.sku,className:"draft-product-card"},
   z.createElement("div",{className:"draft-product-card__art"},
-    z.createElement("img",{src:Ea[_.sku]?.image,alt:"Embalagem de "+_.name,loading:"lazy"})),
+    z.createElement("img",{src:Ea[_.sku]?.image,alt:"Embalagem de "+_.name,loading:"lazy"}),z.createElement("span",{className:"draft-product-card__sku"},"SKU ",_.sku)),
   z.createElement("div",{className:"draft-product-card__body"},
     z.createElement("div",{className:"draft-product-card__meta"},_.line," · ",_.size),
     z.createElement("strong",{className:"draft-product-card__title"},_.name),
@@ -50,11 +50,11 @@ z.createElement("small",null,"Descrição do produto"),preview&&k.includes(previ
         z.createElement("strong",null,fn(_.price*_.quantity))),
       z.createElement("div",{className:"quantity"},
         z.createElement("button",{type:"button",className:"icon-button","aria-label":`Remover uma unidade de ${_.name}`,onClick:()=>Fl(_.sku,-1)},z.createElement(D1,{size:17})),
-        z.createElement("span",{"aria-live":"polite"},_.quantity),
+        z.createElement("span",{key:_.quantity,"aria-live":"polite",className:"wella-quantity-pulse"},_.quantity),
         z.createElement("button",{type:"button",className:"icon-button","aria-label":`Adicionar uma unidade de ${_.name}`,onClick:()=>Fl(_.sku,1)},z.createElement(ry,{size:17})))),
     z.createElement("label",{className:"draft-product-card__note"},"Observação deste produto",
       z.createElement("textarea",{value:_.itemNote,placeholder:"Ex.: para uso no atendimento",rows:2,maxLength:300,
-        onChange:event=>setItemNotes(notes=>({...notes,[_.sku]:event.target.value}))})))))),z.createElement("label",{className:"field"},"Observação",z.createElement("textarea",{value:Y,onChange:_=>Nl(_.target.value),rows:"2",maxLength:"500"})),z.createElement("div",{className:"order-total"},z.createElement("span",null,"Total de referência"),z.createElement("strong",null,fn(dy(Gl)))),z.createElement("button",{type:"submit",className:"primary"},"Solicitar análise ",z.createElement(N1,{size:18}))):z.createElement("p",{className:"empty"},"Adicione um produto do catálogo para montar o pedido."))),z.createElement("div",{className:nl.text?"toast visible":"toast",role:"status","aria-atomic":"true"},nl.text))}// A autenticação visual é exibida somente em docs/testes/login-modal.html.
+        onChange:event=>setItemNotes(notes=>({...notes,[_.sku]:event.target.value}))})))))),z.createElement("label",{className:"field"},"Observação geral do pedido",z.createElement("textarea",{value:Y,onChange:_=>Nl(_.target.value),rows:"2",maxLength:"500"})),z.createElement("div",{className:"wella-review-checkout"},z.createElement("div",{className:"order-total"},z.createElement("span",null,"Total de referência"),z.createElement("strong",null,fn(dy(Gl)))),z.createElement("button",{type:"submit",className:"primary wella-review-checkout__submit"},"Solicitar análise ",z.createElement(N1,{size:18})),z.createElement("small",{className:"wella-review-checkout__notice"},"Envia para conferência. Não realiza uma compra."))):z.createElement("p",{className:"empty"},"Adicione um produto do catálogo para montar o pedido."))),z.createElement("div",{className:nl.text?"toast visible":"toast",role:"status","aria-atomic":"true"},nl.text))}// A autenticação visual é exibida somente em docs/testes/login-modal.html.
 // O catálogo é montado atrás do modal e fica inerte até liberar a demonstração.
 T1.createRoot(document.getElementById("root")).render(z.createElement(x1,null));
 </script>
@@ -695,6 +695,91 @@ dialog[aria-labelledby="draft-title"] .draft>header {position:sticky;top:-22px;z
 }
 @media(prefers-reduced-motion:reduce) {dialog[aria-labelledby="draft-title"],.mobile-order-rail-preview__toggle {animation:none!important;transition:none!important}}
 </style>
+
+<style id="wella-order-polish-v3">
+/* Refinamento do carrinho: seleção visual, contagem viva e resumo que não desaparece. */
+dialog[aria-labelledby="draft-title"]:has(.draft-items) {
+  height:min(94dvh,880px)!important;
+  overflow:hidden!important;
+}
+dialog[aria-labelledby="draft-title"] .draft:has(.draft-items) {
+  padding:0!important; min-height:0!important; height:100%!important;
+  overflow:hidden!important; display:flex!important; flex-direction:column!important;
+}
+dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>header {
+  flex:0 0 auto;position:relative!important;top:auto!important;
+  padding:19px 22px 15px!important;
+  border-bottom:1px solid var(--border);
+  background:radial-gradient(circle at 12% -150%,color-mix(in srgb,var(--accent) 20%,transparent),transparent 60%),var(--surface)!important;
+}
+.wella-draft-header__copy {display:grid;gap:3px;min-width:0}
+.wella-draft-header__eyebrow {
+  color:var(--accent);text-transform:uppercase;letter-spacing:.14em;
+  font-weight:800;font-size:10px;line-height:1.2;
+}
+.wella-draft-header__caption {margin:0;color:var(--muted);font-size:12px;line-height:1.4}
+dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.draft-items {
+  flex:1 1 auto!important;min-height:0;overflow-y:auto!important;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+  display:grid!important;align-content:start;gap:13px!important;
+  padding:15px 20px 18px!important;margin:0!important;
+}
+.draft-product-card {
+  position:relative;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+  animation:wella-card-arrive .32s both cubic-bezier(.2,.7,.2,1);
+}
+.draft-product-card:nth-child(2) {animation-delay:45ms}
+.draft-product-card:nth-child(3) {animation-delay:90ms}
+.draft-product-card:nth-child(4) {animation-delay:135ms}
+.draft-product-card:nth-child(n+5) {animation-delay:160ms}
+.draft-product-card:focus-within {border-color:var(--accent)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 16%,transparent)}
+@media(hover:hover){.draft-product-card:hover{transform:translateY(-2px);box-shadow:0 9px 24px #0003}}
+.draft-product-card__art {position:relative}
+.draft-product-card__art img {transition:transform .3s ease}
+@media(hover:hover){.draft-product-card:hover .draft-product-card__art img{transform:scale(1.045)}}
+.draft-product-card__sku {
+  position:absolute;bottom:6px;left:50%;transform:translateX(-50%);max-width:94%;
+  border-radius:50px;padding:3px 8px;background:#fdf9f2eb;color:#444;
+  font-size:9px;font-weight:800;white-space:nowrap;letter-spacing:.03em;
+  box-shadow:0 1px 4px #0002;
+}
+.wella-quantity-pulse {display:inline-grid;place-items:center;animation:wella-count-pop .24s both}
+dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.field {
+  flex:0 0 auto;margin:0!important;padding:10px 20px 10px;
+  background:var(--surface);border-top:1px solid var(--border);
+}
+dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.field textarea {
+  max-height:84px;resize:none;font-weight:400;
+}
+.wella-review-checkout {
+  flex:0 0 auto;padding:14px 20px 18px;display:grid;gap:9px;
+  border-top:1px solid var(--border);
+  background:var(--surface);box-shadow:0 -10px 26px #0002;
+}
+.wella-review-checkout .order-total {padding:0;margin:0 0 2px;border:0}
+.wella-review-checkout .order-total strong {font-size:21px;letter-spacing:-.035em;color:var(--accent)}
+.wella-review-checkout__submit {
+  width:100%;min-height:47px;border-radius:13px!important;
+  display:flex!important;align-items:center;justify-content:center;gap:8px;
+  font-weight:800;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 16%,transparent);
+}
+.wella-review-checkout__notice {text-align:center;color:var(--muted);font-size:10px;line-height:1.4}
+@keyframes wella-card-arrive {from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes wella-count-pop {0%{transform:scale(.75);opacity:.55}60%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+@media(max-width:760px){
+  dialog[aria-labelledby="draft-title"]:has(.draft-items) {height:calc(96dvh - env(safe-area-inset-top,0px))!important}
+  dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>header {padding:16px 16px 12px!important}
+  dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.draft-items {padding:13px 13px 15px!important;gap:10px!important}
+  dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.field {padding:8px 14px}
+  .wella-review-checkout {padding:11px 14px calc(14px + env(safe-area-inset-bottom,0px))}
+  .wella-review-checkout__submit {min-height:45px}
+}
+@media(prefers-reduced-motion:reduce){
+  .draft-product-card,.wella-quantity-pulse{animation:none!important}
+  .draft-product-card,.draft-product-card__art img{transition:none!important}
+}
+</style>
 </head>
   <body>
     <!-- O catálogo aprovado mantém as duas barras. O seletor "Testar visual" foi removido. -->
@@ -766,7 +851,10 @@ dialog[aria-labelledby="draft-title"] .draft>header {position:sticky;top:-22px;z
     if (!badge) return;
     const reviewButton = root.querySelector('.page-header .draft-button');
     const count = reviewButton?.querySelector('.count')?.textContent?.trim() || '0';
-    badge.textContent = String(Number(count) || 0);
+    const amount = Number(count) || 0;
+    badge.textContent = String(amount);
+    const toggle = rail?.querySelector('.mobile-order-rail-preview__toggle');
+    if (toggle) toggle.setAttribute('aria-label', 'Abrir carrinho, ' + amount + (amount === 1 ? ' unidade' : ' unidades'));
   };
 
   // O próprio botão vira a janela: o dialog começa com as mesmas dimensões
