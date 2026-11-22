@@ -264,6 +264,67 @@ dialog::backdrop { background: #050a12be; }
   .product-art { padding-inline: 24px; }
 }
 @media (max-width: 760px) {
+  .draft-button { display: none; }
+  .mobile-order-rail {
+    position: fixed;
+    z-index: 5;
+    right: max(0px, env(safe-area-inset-right, 0px));
+    bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+  .mobile-order-rail__toggle {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 58px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-right: 0;
+    border-radius: 16px 0 0 16px;
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: 0 8px 24px #0005;
+    pointer-events: auto;
+  }
+  .mobile-order-rail__toggle:focus-visible { outline-offset: -4px; }
+  .mobile-order-rail__count {
+    position: absolute;
+    top: -6px;
+    left: -7px;
+    display: grid;
+    place-items: center;
+    min-width: 21px;
+    height: 21px;
+    padding: 0 5px;
+    border: 2px solid var(--bg);
+    border-radius: 50px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .mobile-order-rail__panel {
+    position: absolute;
+    right: 54px;
+    bottom: 0;
+    width: min(280px, calc(100vw - 78px));
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: 0 12px 32px #0006;
+    color: var(--text);
+    pointer-events: auto;
+    animation: order-rail-in 180ms ease-out both;
+  }
+  .mobile-order-rail__panel header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .mobile-order-rail__panel header .icon-button { width: 36px; min-height: 36px; height: 36px; }
+  .mobile-order-rail__panel p { margin: 11px 0 13px; color: var(--muted); font-size: 13px; }
+  .mobile-order-rail__review { width: 100%; min-height: 42px; }
+  @keyframes order-rail-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
   .mobile-header { display: flex; align-items: center; justify-content: space-between; padding: calc(7px + env(safe-area-inset-top, 0px)) max(15px, env(safe-area-inset-right, 0px)) 7px max(15px, env(safe-area-inset-left, 0px)); background: var(--sidebar); border-bottom: 1px solid var(--border); }
   .mobile-header .brand { font-size: 18px; }
   .mobile-header .brand-mark { width: 30px; height: 30px; font-size: 22px; }
