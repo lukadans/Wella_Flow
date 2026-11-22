@@ -186,8 +186,29 @@ html, body { background: transparent !important; }
 body {min-height:100dvh!important;display:grid!important;place-items:center!important;padding:clamp(10px,2.5vw,24px)!important;overflow-y:auto}
 .shell { width:min(924px,100%)!important;max-height:none; box-shadow:0 32px 100px rgba(0,0,0,.46),inset 0 1px rgba(255,255,255,.16)!important; }
 .preview-access {display:flex;justify-content:center;margin-top:12px}
-.preview-access button {background:transparent;color:#d7e7f9;cursor:pointer;border:1px solid rgba(184,210,242,.34);border-radius:12px;padding:10px 14px;font-size:12px}
-.preview-access button:hover,.preview-access button:focus-visible {background:rgba(218,232,255,.12)}
+.preview-access button {
+  position:relative;isolation:isolate;overflow:hidden;cursor:pointer;
+  color:#f8fbff;font-weight:750;letter-spacing:.018em;
+  background:linear-gradient(120deg,#5a6675 0%,#b4c0cc 24%,#eff5fa 48%,#a9b6c5 75%,#5f6c7c 100%);
+  border:1px solid rgba(247,251,255,.9);border-radius:12px;
+  padding:11px 17px;font-size:12px;
+  text-shadow:0 1px 2px rgba(10,19,30,.72);
+  box-shadow:0 0 0 1px rgba(187,208,229,.22),0 5px 20px rgba(207,224,241,.35),0 0 28px rgba(221,235,249,.28),inset 0 1px 0 rgba(255,255,255,.83),inset 0 -2px 8px rgba(38,50,67,.28);
+  transition:transform .2s ease,box-shadow .25s ease,filter .25s ease;
+}
+.preview-access button::after {
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 22%,rgba(255,255,255,.44) 46%,transparent 67%);
+  transform:translateX(-120%);transition:transform .5s ease;
+}
+.preview-access button:hover,.preview-access button:focus-visible {
+  background:linear-gradient(120deg,#687786 0%,#cad5df 25%,#fff 48%,#b9c8d6 76%,#6b7a8c 100%);
+  filter:brightness(1.12);transform:translateY(-2px);
+  box-shadow:0 0 0 1px rgba(231,244,255,.58),0 8px 28px rgba(216,233,252,.57),0 0 42px rgba(232,242,255,.46),inset 0 1px 0 #fff;
+}
+.preview-access button:hover::after,.preview-access button:focus-visible::after {transform:translateX(120%)}
+.preview-access button:active {transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.preview-access button,.preview-access button::after{transition:none!important}}
 @media(max-width:600px){body{align-items:start!important;padding:10px!important}.shell{max-width:100%}}
 </style>
 </head>
