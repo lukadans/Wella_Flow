@@ -89,6 +89,7 @@ function App() {
   const [note, setNote] = useSaved('wella-flow-tauri-note', '');
   const [orders, setOrders] = useSaved('wella-flow-tauri-orders', []);
   const [message, setMessage] = useState({ text: '', tick: 0 });
+  const [orderRailOpen, setOrderRailOpen] = useState(false);
   const dialog = useRef(null);
   const main = useRef(null);
   const title = pages.find(item => item.id === page).label;
@@ -112,6 +113,7 @@ function App() {
   }, [message]);
 
   function navigate(id) {
+    setOrderRailOpen(false);
     setPage(id);
     setQuery('');
     setFilter('Todos');
@@ -185,6 +187,23 @@ function App() {
       <button type="button" className="theme-button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
         {theme === 'dark' ? <Sun size={19}/> : <Moon size={19}/>}
         {theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+      </button>
+    </aside>
+
+    <aside className={`mobile-order-rail${orderRailOpen ? ' is-open' : ''}`} aria-label="Pedido atual">
+      {orderRailOpen && <div className="mobile-order-rail__panel" id="mobile-order-summary">
+        <header><strong>Meu pedido</strong>
+          <button type="button" className="icon-button" aria-label="Fechar resumo do pedido" onClick={() => setOrderRailOpen(false)}><X size={18}/></button>
+        </header>
+        <p>{unitCount} {unitCount === 1 ? 'unidade' : 'unidades'} · {currency(amount(draftItems))}</p>
+        <button type="button" className="primary mobile-order-rail__review" onClick={() => {
+          setOrderRailOpen(false);
+          dialog.current.showModal();
+        }}><ShoppingBag size={17}/> Revisar pedido</button>
+      </div>}
+      <button type="button" className="mobile-order-rail__toggle" aria-label={orderRailOpen ? 'Recolher pedido' : 'Expandir pedido'}
+        aria-expanded={orderRailOpen} aria-controls="mobile-order-summary" onClick={() => setOrderRailOpen(open => !open)}>
+        <ShoppingBag size={20}/><span className="mobile-order-rail__count">{unitCount}</span>
       </button>
     </aside>
 
