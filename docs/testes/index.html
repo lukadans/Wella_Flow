@@ -563,7 +563,7 @@ body.wella-auth-locked{overflow:hidden!important}
   .page-header .draft-button { display: none !important; }
   .mobile-order-rail-preview {
     position: fixed; z-index: 5; right: max(0px, env(safe-area-inset-right, 0px));
-    bottom: calc(104px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center;
+    bottom: calc(126px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center;
   }
   .mobile-order-rail-preview__toggle {
     position: relative; display: grid; place-items: center; width: 54px; height: 58px;
@@ -584,10 +584,13 @@ body.wella-auth-locked{overflow:hidden!important}
     animation: wella-order-rail-in 180ms ease-out both;
   }
   .mobile-order-rail-preview__panel[hidden] { display: none; }
-  .mobile-order-rail-preview__panel header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .mobile-order-rail-preview__close { min-height: 36px; width: 36px; padding: 0; border-radius: 9px; }
+  .mobile-order-rail-preview__panel[role="button"] {
+    display: block; color: var(--text); text-align: left; font: inherit; cursor: pointer;
+  }
+  .mobile-order-rail-preview__panel[role="button"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .mobile-order-rail-preview__panel[role="button"]:hover { border-color: var(--accent); }
+  .mobile-order-rail-preview__panel header { display: flex; align-items: center; justify-content: flex-start; gap: 12px; }
   .mobile-order-rail-preview__summary { margin: 11px 0 13px; color: var(--muted); font-size: 13px; }
-  .mobile-order-rail-preview__review { width: 100%; min-height: 42px; }
   @keyframes wella-order-rail-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
 }
 </style>
@@ -641,7 +644,19 @@ body.wella-auth-locked{overflow:hidden!important}
   const root = document.getElementById('root');
   if (!root) return;
   let rail = null;
+
+  const bindDialogDismiss = () => {
+    root.querySelectorAll('dialog').forEach(dialog => {
+      if (dialog.dataset.dismissOnBackdrop === 'true') return;
+      dialog.dataset.dismissOnBackdrop = 'true';
+      dialog.addEventListener('click', event => {
+        if (event.target === dialog) dialog.close();
+      });
+    });
+  };
+
   const install = () => {
+    bindDialogDismiss();
     const reviewButton = root.querySelector('.page-header .draft-button');
     if (!reviewButton || root.querySelector('.mobile-order-rail')) return;
     if (rail) return;
@@ -653,26 +668,19 @@ body.wella-auth-locked{overflow:hidden!important}
     const panel = document.createElement('div');
     panel.className = 'mobile-order-rail-preview__panel';
     panel.id = 'mobile-order-summary-preview';
+    panel.setAttribute('role', 'button');
+    panel.setAttribute('aria-label', 'Abrir revisão do pedido');
+    panel.tabIndex = 0;
     panel.hidden = true;
 
     const heading = document.createElement('header');
     const title = document.createElement('strong');
     title.textContent = 'Meu pedido';
-    const close = document.createElement('button');
-    close.type = 'button';
-    close.className = 'icon-button mobile-order-rail-preview__close';
-    close.setAttribute('aria-label', 'Fechar resumo do pedido');
-    close.textContent = '×';
-    heading.append(title, close);
+    heading.append(title);
 
     const summary = document.createElement('p');
     summary.className = 'mobile-order-rail-preview__summary';
-
-    const review = document.createElement('button');
-    review.type = 'button';
-    review.className = 'primary mobile-order-rail-preview__review';
-    review.textContent = 'Revisar pedido';
-    panel.append(heading, summary, review);
+    panel.append(heading, summary);
 
     const toggle = document.createElement('button');
     toggle.type = 'button';
@@ -689,9 +697,18 @@ body.wella-auth-locked{overflow:hidden!important}
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Recolher pedido' : 'Expandir pedido');
     };
+    const openReview = () => {
+      setOpen(false);
+      reviewButton.click();
+    };
     toggle.addEventListener('click', () => setOpen(panel.hidden));
-    close.addEventListener('click', () => setOpen(false));
-    review.addEventListener('click', () => { setOpen(false); reviewButton.click(); });
+    panel.addEventListener('click', openReview);
+    panel.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openReview();
+      }
+    });
 
     const badge = rail.querySelector('.mobile-order-rail-preview__count');
     const refresh = () => {
