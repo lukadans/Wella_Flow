@@ -696,6 +696,92 @@ dialog[aria-labelledby="draft-title"] .draft>header {position:sticky;top:-22px;z
 @media(prefers-reduced-motion:reduce) {dialog[aria-labelledby="draft-title"],.mobile-order-rail-preview__toggle {animation:none!important;transition:none!important}}
 </style>
 
+<style id="wella-rail-trigger-v4">
+/* Acionador compacto independente: preserva inteiramente o painel aprovado. */
+.mobile-order-rail-preview {
+  top:clamp(180px,39dvh,445px)!important;
+  right:max(0px,env(safe-area-inset-right,0px))!important;
+  bottom:auto!important;
+}
+.mobile-order-rail-preview__toggle {
+  isolation:isolate;
+  width:56px!important;
+  height:66px!important;
+  min-width:56px;
+  padding:0!important;
+  display:grid!important;
+  place-items:center;
+  gap:0!important;
+  border:1px solid color-mix(in srgb,var(--accent) 36%,var(--border))!important;
+  border-right:0!important;
+  border-radius:19px 0 0 19px!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--raised) 90%,white 10%),var(--surface))!important;
+  box-shadow:-8px 8px 25px #0005,inset 1px 1px 0 #ffffff24!important;
+  color:var(--accent)!important;
+  -webkit-tap-highlight-color:transparent;
+  transition:width .22s ease,filter .22s ease,box-shadow .22s ease!important;
+}
+.mobile-order-rail-preview__toggle::before {
+  content:"";
+  position:absolute;
+  right:0;
+  top:12px;
+  bottom:12px;
+  width:3px;
+  border-radius:3px 0 0 3px;
+  background:linear-gradient(180deg,transparent,var(--accent),transparent);
+  opacity:.7;
+}
+.mobile-order-rail-preview__icon {
+  display:grid;place-items:center;
+  width:42px;height:42px;
+  border:1px solid color-mix(in srgb,var(--accent) 23%,transparent);
+  border-radius:14px;
+  background:radial-gradient(circle at 20% 15%,color-mix(in srgb,var(--accent) 17%,transparent),transparent 75%);
+  color:var(--accent);
+}
+.mobile-order-rail-preview__icon svg {display:block;width:25px;height:25px}
+.mobile-order-rail-preview__label {display:none!important}
+.mobile-order-rail-preview__count {
+  position:absolute!important;
+  top:-7px!important;
+  left:-9px!important;
+  min-width:23px!important;
+  height:23px!important;
+  padding:0 5px!important;
+  border-radius:999px!important;
+  border:2px solid var(--bg)!important;
+  background:var(--accent)!important;
+  color:var(--on-accent)!important;
+  display:grid!important;place-items:center;
+  font:800 11px/1 system-ui,sans-serif!important;
+  box-shadow:0 2px 8px #0004;
+  font-variant-numeric:tabular-nums;
+}
+@media(hover:hover) {
+  .mobile-order-rail-preview__toggle:hover {
+    width:63px!important;
+    filter:brightness(1.08);
+    box-shadow:-10px 10px 28px #0006,inset 1px 1px 0 #ffffff30!important;
+  }
+}
+.mobile-order-rail-preview__toggle:active {filter:brightness(.95)}
+.mobile-order-rail-preview__toggle:focus-visible {outline:2px solid var(--accent)!important;outline-offset:3px!important}
+@media(max-width:760px) {
+  .mobile-order-rail-preview {
+    top:clamp(165px,37dvh,390px)!important;
+  }
+  .mobile-order-rail-preview__toggle {
+    width:54px!important;
+    min-width:54px;
+    height:64px!important;
+    border-radius:19px 0 0 19px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .mobile-order-rail-preview__toggle {transition:none!important}
+}
+</style>
 <style id="wella-order-polish-v3">
 /* Refinamento do carrinho: seleção visual, contagem viva e resumo que não desaparece. */
 dialog[aria-labelledby="draft-title"]:has(.draft-items) {
@@ -961,7 +1047,7 @@ dialog[aria-labelledby="draft-title"] .draft:has(.draft-items)>.field textarea {
     toggle.className = 'mobile-order-rail-preview__toggle';
     toggle.setAttribute('aria-label', 'Abrir pedido');
     toggle.title = 'Abrir pedido';
-    toggle.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7Z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg><span class="mobile-order-rail-preview__count">0</span><span class="mobile-order-rail-preview__label">Pedido</span>';
+    toggle.innerHTML = '<span class="mobile-order-rail-preview__icon"><svg aria-hidden="true" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 4.5h2l2.15 10.1a2 2 0 0 0 1.96 1.6h8.93a2 2 0 0 0 1.95-1.55l1.31-6.15H6.45"></path><circle cx="10" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle></svg></span><span class="mobile-order-rail-preview__count">0</span>';
     toggle.addEventListener('click', openReview);
     rail.append(toggle);
     document.body.append(rail);
