@@ -421,6 +421,13 @@ body.wella-auth-locked{overflow:hidden!important}
   display:block;width:100%;height:100%;border:0;background:transparent;
 }
 </style>
+<script id="wella-nav-silver-test-config">
+  // Experimento isolado. Use ?silver=off para comparar sem a modificação.
+  if (new URLSearchParams(window.location.search).get('silver') !== 'off') {
+    document.documentElement.classList.add('wella-nav-silver-preview');
+  }
+</script>
+<link rel="stylesheet" href="./silver-navigation.css" id="wella-nav-silver-test-css">
 </head>
   <body>
     <div class="design-chooser" role="group" aria-label="Estilos da prévia">
